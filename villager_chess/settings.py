@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'villager_chess_api',
+    'openai'
 ]
 
 # THIS IS NEW
