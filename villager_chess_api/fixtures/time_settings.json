@@ -1,0 +1,10 @@
+[
+    {
+        "model": "villager_chess_api.timesetting",
+        "pk": 1,
+        "fields": {
+            "time_amount": 5,
+            "increment": 0
+        }
+    }
+]
