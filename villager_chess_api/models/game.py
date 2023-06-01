@@ -12,4 +12,6 @@ class Game(models.Model):
     b_notes = models.CharField(max_length=100, default="")
     tournament = models.ForeignKey(
         "Tournament", blank=True, null=True, on_delete=models.CASCADE, related_name="tournament")
-    time_setting = models.ForeignKey('TimeSetting', on_delete=models.DO_NOTHING)
+    time_setting = models.ForeignKey(
+        'TimeSetting', on_delete=models.SET_NULL, null=True, blank=True)
+    pgn = models.CharField(max_length=400, null=True, blank=True)
