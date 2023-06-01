@@ -18,11 +18,12 @@ from django.contrib import admin
 from django.conf.urls import include
 from django.urls import path
 from rest_framework import routers
-from villager_chess_api.views import PlayerView, GameView, login_user, register_user
+from villager_chess_api.views import PlayerView, GameView, TimeSettingView, login_user, register_user
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'players', PlayerView, 'player')
 router.register(r'games', GameView, 'game')
+router.register(r'timesettings', TimeSettingView, 'time_setting')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register', register_user),
