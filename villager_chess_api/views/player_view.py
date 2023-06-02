@@ -28,7 +28,6 @@ class PlayerSerializer(serializers.ModelSerializer):
         model = Player
         fields = ('id', 'user', 'full_name', 'email', 'username', 'friends')
 
-
 class PlayerView(ViewSet):
     """handles rest requests for player objects"""
 
