@@ -24,7 +24,7 @@ class TimeSettingView(ViewSet):
         times = TimeSetting.objects.all()
         serialized = TimeSettingSerializer(times, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
-    def list(self, request, pk=None):
+    def retrieve(self, request, pk=None):
         """handles GET requests for single time settings"""
         time = TimeSetting.objects.get(pk=pk)
         serialized = TimeSettingSerializer(time, many=False)
