@@ -27,7 +27,7 @@ class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ('id', 'user', 'full_name', 'email', 'username', 'friends')
-
+        depth=1
 class PlayerView(ViewSet):
     """handles rest requests for player objects"""
 
@@ -40,6 +40,8 @@ class PlayerView(ViewSet):
     def list(self, request):
         """handle request for all players"""
         players = Player.objects.all()
+        if "email" in request.query_params:
+            players = players.filter(email = request.query_params['email'])
         serialized = PlayerSerializer(players, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
 

@@ -7,7 +7,12 @@ from django.db.models import Count, Q
 from django.contrib.auth.models import User
 from villager_chess_api.models import Player, CommunityPost
 
+class PosterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Player
+        fields = ('id', 'full_name')
 class CommunityPostSerializer(serializers.ModelSerializer):
+    poster = PosterSerializer(many=False)
     class Meta:
         model = CommunityPost
         fields = ('id', 'poster', 'message', 'date_time')
