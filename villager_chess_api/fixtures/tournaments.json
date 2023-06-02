@@ -1,0 +1,13 @@
+[
+    {
+        "model": "villager_chess_api.tournament",
+        "pk": 1,
+        "fields": {
+            "title": "first tournament",
+            "creator": 1,
+            "date": "2023-06-01",
+            "time_setting": 1,
+            "complete": false
+        }
+    }
+]

@@ -18,7 +18,7 @@ class CreateTimeSettingSerializer(serializers.ModelSerializer):
         fields = ['id', 'time_amount', 'increment']
 
 class TimeSettingView(ViewSet):
-    """handles rest requests for time_settings"""
+    """handles rest requests for time_setting objects"""
     def list(self, request):
         """handles GET requests for all time settings"""
         times = TimeSetting.objects.all()

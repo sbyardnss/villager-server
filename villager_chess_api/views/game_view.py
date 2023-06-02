@@ -28,7 +28,7 @@ class CreateGameSerializer(serializers.ModelSerializer):
 
 
 class GameView(ViewSet):
-    """handles requests for game info"""
+    """handles rest requests for game objects"""
 
     def list(self, request):
         """handles GET requests for all games"""
@@ -37,13 +37,13 @@ class GameView(ViewSet):
         return Response(serialized.data, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk=None):
-        """handles GET requests for particular game via id"""
+        """handles GET requests for individual game"""
         game = Game.objects.get(pk=pk)
         serialized = GameSerializer(game, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-        """handles POST requests to gameview"""
+        """handles POST requests for game view"""
         player_w = Player.objects.get(pk=request.data['player_w'])
         player_b = Player.objects.get(pk=request.data['player_b'])
         serialized = CreateGameSerializer(data=request.data)
@@ -51,11 +51,12 @@ class GameView(ViewSet):
         serialized.save(player_w=player_w, player_b=player_b)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
     def destroy(self, request, pk=None):
-        """handles DELETE requests to gameview"""
+        """handles DELETE requests for game view"""
         game = Game.objects.get(pk=pk)
         game.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     def update(self, request, pk=None):
+        """handles PUT requests for game view"""
         game = Game.objects.get(pk=pk)
         game.winner = request.data['winner']
         game.win_style = request.data['win_style']

@@ -34,5 +34,41 @@
             "groups": [],
             "user_permissions": []
         }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "ryner",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "crash",
+            "first_name": "josh",
+            "last_name": "ryner",
+            "email": "josh@ryner.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2023-05-11T21:19:25.057Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 4,
+        "fields": {
+            "password": "jw",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "skip",
+            "first_name": "josh",
+            "last_name": "whiteman",
+            "email": "josh@whiteman.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2023-05-11T21:19:25.057Z",
+            "groups": [],
+            "user_permissions": []
+        }
     }
 ]
