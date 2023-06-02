@@ -30,7 +30,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 
 
 class PlayerView(ViewSet):
-    """villager chess player view"""
+    """handles rest requests for player objects"""
 
     def retrieve(self, request, pk=None):
         """handle request for individual player"""
@@ -45,7 +45,7 @@ class PlayerView(ViewSet):
         return Response(serialized.data, status=status.HTTP_200_OK)
 
     def update(self, request, pk=None):
-        """handles put requests for player"""
+        """handles put requests for player view"""
         player = Player.objects.get(pk=pk)
         player.user.username = request.data['username']
         player.user.set_password(request.data['password'])
