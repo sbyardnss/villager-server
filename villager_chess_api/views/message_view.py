@@ -32,6 +32,7 @@ class MessageView(ViewSet):
         return Response(serialized.data, status=status.HTTP_200_OK)
 
     def create(self, request):
+        """handles POST requests for message view"""
         player = Player.objects.get(user=request.auth.user)
         # message = {
         #     'sender': player.id,
@@ -46,6 +47,7 @@ class MessageView(ViewSet):
         return Response(message.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, pk):
+        """handles PUT requests for message view"""
         message = Message.objects.get(pk=pk)
         message.read = request.data['read']
         message.save()
