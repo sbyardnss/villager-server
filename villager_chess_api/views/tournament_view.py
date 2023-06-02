@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from datetime import datetime
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
-from villager_chess_api.models import Tournament, Game, Player
+from villager_chess_api.models import Tournament, Game, Player, TimeSetting
 
 class TournamentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,6 +29,9 @@ class TournamentView(ViewSet):
         return Response(serialized.data, status=status.HTTP_200_OK)
     def create(self, request):
         """handles POST requests for tournament view"""
+        creator = Player.objects.get(user = request.auth.user)
+        time_setting = TimeSetting.objects.get(pk=request.data['timeSetting'])
         serialized = CreateTournamentSerializer(data = request.data)
         serialized.is_valid(raise_exception=True)
-        serialized.save()
+        serialized.save(creator = creator, time_setting = time_setting)
+        return Response(serialized.data, status=status.HTTP_201_CREATED)

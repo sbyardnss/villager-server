@@ -1,0 +1,24 @@
+[
+    {
+        "model": "villager_chess_api.message",
+        "pk": 1,
+        "fields": {
+            "sender": 1, 
+            "recipient": 2,
+            "message": "that's checkmate dawg",
+            "date_time": "2023-06-01T21:22:25.057Z",
+            "read": true
+        }
+    },
+    {
+        "model": "villager_chess_api.message",
+        "pk": 2,
+        "fields": {
+            "sender": 2, 
+            "recipient": 1,
+            "message": "how are you so good",
+            "date_time": "2023-06-01T21:25:25.057Z",
+            "read": false
+        }
+    }
+]

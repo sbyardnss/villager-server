@@ -44,8 +44,8 @@ class GameView(ViewSet):
 
     def create(self, request):
         """handles POST requests for game view"""
-        player_w = Player.objects.get(pk=request.data['player_w'])
-        player_b = Player.objects.get(pk=request.data['player_b'])
+        player_w = Player.objects.get(pk=request.data['playerW'])
+        player_b = Player.objects.get(pk=request.data['playerB'])
         serialized = CreateGameSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
         serialized.save(player_w=player_w, player_b=player_b)
@@ -59,9 +59,9 @@ class GameView(ViewSet):
         """handles PUT requests for game view"""
         game = Game.objects.get(pk=pk)
         game.winner = request.data['winner']
-        game.win_style = request.data['win_style']
-        game.w_notes = request.data['w_notes']
-        game.b_notes = request.data['b_notes']
+        game.win_style = request.data['winStyle']
+        game.w_notes = request.data['wNotes']
+        game.b_notes = request.data['bNotes']
         game.pgn = request.data['pgn']
         game.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
