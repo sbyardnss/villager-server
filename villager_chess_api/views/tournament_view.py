@@ -1,16 +1,28 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from rest_framework.decorators import action
-from datetime import datetime
-from django.db.models import Count, Q
-from django.contrib.auth.models import User
-from villager_chess_api.models import Tournament, Game, Player, TimeSetting
+# from rest_framework.decorators import action
+# from datetime import datetime
+# from django.db.models import Count, Q
+# from django.contrib.auth.models import User
+from villager_chess_api.models import Tournament, Player, TimeSetting, Game
 
+class PlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Player
+        fields = ('id', 'full_name')
+class GameTournamentSerializer(serializers.ModelSerializer):
+    player_w = PlayerSerializer(many=False)
+    player_b = PlayerSerializer(many=False)
+    class Meta:
+        model = Game
+        fields = ('id', 'player_w', 'player_b', 'winner', 'pgn', 'win_style', 'tournament_round')
 class TournamentSerializer(serializers.ModelSerializer):
+    creator = PlayerSerializer(many=False)
+    games = GameTournamentSerializer(many=True)
     class Meta:
         model = Tournament
-        fields = ('id', 'title', 'games', 'time_setting', 'complete')
+        fields = ('id', 'title', 'creator', 'games', 'time_setting', 'complete')
 class CreateTournamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournament

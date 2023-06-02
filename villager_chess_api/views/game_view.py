@@ -18,7 +18,7 @@ class GameSerializer(serializers.ModelSerializer):
     winner = PlayerOnGameSerializer(many=False)
     class Meta:
         model = Game
-        fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament',
+        fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
                   'is_tournament', 'time_setting', 'winner', 'pgn')
 class CreateGameSerializer(serializers.ModelSerializer):
 
