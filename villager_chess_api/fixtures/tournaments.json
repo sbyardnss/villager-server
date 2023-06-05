@@ -7,7 +7,13 @@
             "creator": 1,
             "date": "2023-06-01",
             "time_setting": 1,
-            "complete": false
+            "complete": false,
+            "competitors": [
+                1,
+                2,
+                3,
+                4
+            ]
         }
     }
 ]
