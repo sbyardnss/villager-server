@@ -17,7 +17,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class CreateMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['id', 'sender', 'recipient', 'message', 'date_time', 'read']
+        fields = ['id', 'recipient', 'message', 'date_time']
 
 
 class MessageView(ViewSet):
@@ -34,16 +34,9 @@ class MessageView(ViewSet):
     def create(self, request):
         """handles POST requests for message view"""
         player = Player.objects.get(user=request.auth.user)
-        # message = {
-        #     'sender': player.id,
-        #     'recipient': request.data['recipient'],
-        #     'message': request.data['message'],
-        #     'read': False
-        #     # 'date_time': request.data['date_time']
-        # }
         message = CreateMessageSerializer(data=request.data)
         message.is_valid(raise_exception=True)
-        message.save(sender=player)
+        message.save(sender=player, read=False)
         return Response(message.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, pk):
