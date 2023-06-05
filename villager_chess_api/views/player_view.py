@@ -15,10 +15,11 @@ class FriendSerializer(serializers.ModelSerializer):
 
 
 class PlayerProfileSerializer(serializers.ModelSerializer):
+    friends = FriendSerializer(many=True)
     class Meta:
         model = Player
         fields = ('id', 'user', 'full_name', 'first_name',
-                  'last_name', 'email', 'username', 'password')
+                  'last_name', 'email', 'username', 'friends')
 
 
 class PlayerSerializer(serializers.ModelSerializer):
