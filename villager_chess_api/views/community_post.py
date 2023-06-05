@@ -11,6 +11,7 @@ class PosterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ('id', 'full_name')
+
 class CommunityPostSerializer(serializers.ModelSerializer):
     poster = PosterSerializer(many=False)
     class Meta:
