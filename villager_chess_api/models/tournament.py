@@ -10,4 +10,5 @@ class Tournament(models.Model):
     time_setting = models.ForeignKey(
         'TimeSetting', on_delete=models.DO_NOTHING, default=0,
         related_name="tournaments_with_time_setting")
+    rounds = models.IntegerField(default=1)
     complete = models.BooleanField(default=False)

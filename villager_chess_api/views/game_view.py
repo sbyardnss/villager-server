@@ -44,8 +44,9 @@ class GameView(ViewSet):
 
     def create(self, request):
         """handles POST requests for game view"""
-        player_w = Player.objects.get(pk=request.data['playerW'])
-        player_b = Player.objects.get(pk=request.data['playerB'])
+        player_w = Player.objects.get(pk=request.data['player_w'])
+        player_b = Player.objects.get(pk=request.data['player_b'])
+        print(request.data)
         serialized = CreateGameSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
         serialized.save(player_w=player_w, player_b=player_b)
