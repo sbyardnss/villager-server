@@ -6,5 +6,13 @@
             "time_amount": 5,
             "increment": 0
         }
+    },
+    {
+        "model": "villager_chess_api.timesetting",
+        "pk": 2,
+        "fields": {
+            "time_amount": 10,
+            "increment": 0
+        }
     }
 ]

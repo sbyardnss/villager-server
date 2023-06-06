@@ -22,7 +22,7 @@ class TournamentSerializer(serializers.ModelSerializer):
     games = GameTournamentSerializer(many=True)
     class Meta:
         model = Tournament
-        fields = ('id', 'title', 'creator', 'games', 'time_setting', 'complete')
+        fields = ('id', 'title', 'creator', 'games', 'time_setting', 'complete', 'competitors')
 class CreateTournamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournament
@@ -43,7 +43,10 @@ class TournamentView(ViewSet):
         """handles POST requests for tournament view"""
         creator = Player.objects.get(user = request.auth.user)
         time_setting = TimeSetting.objects.get(pk=request.data['timeSetting'])
+        competitor_list = []
+        for player in request.data['competitors']:
+            competitor_list.append(player['id'])
         serialized = CreateTournamentSerializer(data = request.data)
         serialized.is_valid(raise_exception=True)
-        serialized.save(creator = creator, time_setting = time_setting)
+        serialized.save(creator = creator, time_setting = time_setting, competitors = competitor_list)
         return Response(serialized.data, status=status.HTTP_201_CREATED)

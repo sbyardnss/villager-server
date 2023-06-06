@@ -23,7 +23,7 @@ from villager_chess_api.views import PlayerView, GameView, CommunityPostView, Me
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'players', PlayerView, 'player')
 router.register(r'games', GameView, 'game')
-router.register(r'timesetting', TimeSettingView, 'time_setting')
+router.register(r'timesettings', TimeSettingView, 'time_setting')
 router.register(r'tournaments', TournamentView, 'tournament')
 router.register(r'messages', MessageView, 'message')
 router.register(r'communityposts', CommunityPostView, 'community_post')
