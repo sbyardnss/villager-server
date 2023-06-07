@@ -22,11 +22,11 @@ class TournamentSerializer(serializers.ModelSerializer):
     games = GameTournamentSerializer(many=True)
     class Meta:
         model = Tournament
-        fields = ('id', 'title', 'creator', 'games', 'time_setting', 'complete', 'competitors', 'rounds')
+        fields = ('id', 'title', 'creator', 'games', 'time_setting', 'complete', 'competitors', 'rounds', 'pairings')
 class CreateTournamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournament
-        fields = ['id', 'title', 'time_setting']
+        fields = ['id', 'title', 'time_setting', 'pairings']
 class TournamentView(ViewSet):
     """handles rest requests for tournament objects"""
     def list(self, request):

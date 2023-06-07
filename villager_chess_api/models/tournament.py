@@ -12,4 +12,4 @@ class Tournament(models.Model):
         related_name="tournaments_with_time_setting")
     rounds = models.IntegerField(default=1)
     complete = models.BooleanField(default=False)
-    # pairings = models.JSONField(default=list)
+    pairings = models.JSONField(default=list)

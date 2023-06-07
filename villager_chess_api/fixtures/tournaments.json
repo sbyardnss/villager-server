@@ -14,7 +14,45 @@
                 3,
                 4
             ],
-            "rounds": 1
+            "rounds": 1,
+            "pairings": [
+                {
+                    "round": 1,
+                    "match": 1,
+                    "player1": 2,
+                    "player2": 3
+                },
+                {
+                    "round": 1,
+                    "match": 2,
+                    "player1": 1,
+                    "player2": 4
+                },
+                {
+                    "round": 2,
+                    "match": 1,
+                    "player1": 3,
+                    "player2": 4
+                },
+                {
+                    "round": 2,
+                    "match": 2,
+                    "player1": 2,
+                    "player2": 1
+                },
+                {
+                    "round": 3,
+                    "match": 1,
+                    "player1": 1,
+                    "player2": 3
+                },
+                {
+                    "round": 3,
+                    "match": 2,
+                    "player1": 4,
+                    "player2": 2
+                }
+            ]
         }
     }
 ]
