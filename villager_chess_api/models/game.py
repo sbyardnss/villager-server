@@ -9,7 +9,7 @@ class Game(models.Model):
         "Player", on_delete=models.CASCADE, related_name="games_as_black")
     date_time = models.DateTimeField(auto_now=True)
     w_notes = models.CharField(max_length=100, default="")
-    b_notes = models.CharField(max_length=100, default="")
+    b_notes = models.CharField(max_length=100, default="", null=True, blank=True)
     tournament = models.ForeignKey(
         "Tournament", blank=True, null=True, on_delete=models.CASCADE, related_name="games")
     tournament_round = models.IntegerField(default=1, null=True, blank=True)
