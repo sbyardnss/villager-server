@@ -50,3 +50,9 @@ class TournamentView(ViewSet):
         serialized.is_valid(raise_exception=True)
         serialized.save(creator = creator, time_setting = time_setting, competitors = competitor_list)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
+    def update(self, request, pk=None):
+        """handles PUT requests for tournament view"""
+        tournament = Tournament.objects.get(pk=pk)
+        tournament.rounds = request.data['rounds']
+        tournament.save()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)

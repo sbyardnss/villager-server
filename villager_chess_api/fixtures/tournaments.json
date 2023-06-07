@@ -15,6 +15,7 @@
                 4
             ],
             "rounds": 1,
+            "in_person": false,
             "pairings": [
                 {
                     "round": 1,
