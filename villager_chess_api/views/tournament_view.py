@@ -43,9 +43,9 @@ class TournamentView(ViewSet):
         """handles POST requests for tournament view"""
         creator = Player.objects.get(user = request.auth.user)
         time_setting = TimeSetting.objects.get(pk=request.data['timeSetting'])
-        competitor_list = []
-        for player in request.data['competitors']:
-            competitor_list.append(player['id'])
+        competitor_list = request.data['competitors']
+        # for player in request.data['competitors']:
+        #     competitor_list.append(player['id'])
         serialized = CreateTournamentSerializer(data = request.data)
         serialized.is_valid(raise_exception=True)
         serialized.save(creator = creator, time_setting = time_setting, competitors = competitor_list)
