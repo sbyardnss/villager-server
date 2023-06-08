@@ -5,26 +5,32 @@ from rest_framework.decorators import action
 from datetime import datetime
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
-from villager_chess_api.models import Player, Game, Tournament
+from villager_chess_api.models import Player, Game, Tournament, TimeSetting
 
 
 class PlayerOnGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ('id', 'full_name')
+
+
 class GameSerializer(serializers.ModelSerializer):
     player_w = PlayerOnGameSerializer(many=False)
     player_b = PlayerOnGameSerializer(many=False)
     winner = PlayerOnGameSerializer(many=False)
+
     class Meta:
         model = Game
         fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
                   'is_tournament', 'time_setting', 'winner', 'pgn')
+
+
 class CreateGameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ['id', 'date_time', 'is_tournament', 'time_setting']
+        fields = ['id', 'date_time', 'is_tournament',
+                  'time_setting', 'win_style', 'winner', 'accepted']
 
 
 class GameView(ViewSet):
@@ -51,11 +57,13 @@ class GameView(ViewSet):
         serialized.is_valid(raise_exception=True)
         serialized.save(player_w=player_w, player_b=player_b)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
+
     def destroy(self, request, pk=None):
         """handles DELETE requests for game view"""
         game = Game.objects.get(pk=pk)
         game.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
     def update(self, request, pk=None):
         """handles PUT requests for game view"""
         game = Game.objects.get(pk=pk)
@@ -66,3 +74,22 @@ class GameView(ViewSet):
         game.pgn = request.data['pgn']
         game.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['post'], detail=False)
+    def outcomes(self, request):
+        """creates game objects in api from arr sent by client from tournament module"""
+        for outcome in request.data:
+            player_w = Player.objects.get(pk=outcome['player_w'])
+            player_b = Player.objects.get(pk=outcome['player_b'])
+            if outcome['winner'] is not None:
+                winner = Player.objects.get(pk=outcome['winner'])
+            else:
+                winner = None
+            tournament = Tournament.objects.get(pk=outcome['tournament'])
+            serialized = CreateGameSerializer(data=outcome)
+            serialized.is_valid(raise_exception=True)
+            serialized.save(player_w=player_w,
+                            player_b=player_b,
+                            tournament=tournament,
+                            winner=winner)
+        return Response(request.data, status=status.HTTP_201_CREATED)
