@@ -30,8 +30,7 @@ class CreateGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ['id', 'date_time', 'is_tournament',
-                  'time_setting', 'win_style', 'winner', 'accepted']
-
+                  'time_setting', 'win_style', 'winner', 'accepted', 'tournament_round']
 
 class GameView(ViewSet):
     """handles rest requests for game objects"""
@@ -68,16 +67,20 @@ class GameView(ViewSet):
         """handles PUT requests for game view"""
         game = Game.objects.get(pk=pk)
         game.winner = request.data['winner']
-        game.win_style = request.data['winStyle']
-        game.w_notes = request.data['wNotes']
-        game.b_notes = request.data['bNotes']
-        game.pgn = request.data['pgn']
+        if game.winner is not None:
+            game.win_style = "checkmate"
+        else:
+            game.win_style = "draw"
+        game.w_notes = request.data['w_notes']
+        game.b_notes = request.data['b_notes']
+        if game.pgn is not None:
+            game.pgn = request.data['pgn']
         game.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post'], detail=False)
     def outcomes(self, request):
-        """creates game objects in api from arr sent by client from tournament module"""
+        """creates game objects in api from arr sent from client tournament module"""
         for outcome in request.data:
             player_w = Player.objects.get(pk=outcome['player_w'])
             player_b = Player.objects.get(pk=outcome['player_b'])
@@ -93,3 +96,14 @@ class GameView(ViewSet):
                             tournament=tournament,
                             winner=winner)
         return Response(request.data, status=status.HTTP_201_CREATED)
+    @action(methods=['put'], detail=False)
+    def tournament_update(self, request):
+        """updates previously created game objects from client tournament module"""
+        for outcome in request.data:
+            player_w = Player.objects.get(pk=outcome['player_w'])
+            player_b = Player.objects.get(pk=outcome['player_b'])
+            game = Game.objects.get(tournament_round = outcome['tournament_round'], tournament_id=outcome['tournament'], player_w=player_w, player_b=player_b)
+            game.winner = outcome['winner']
+            game.win_style = outcome['win_style']
+            game.save()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
