@@ -55,16 +55,42 @@ def register_user(request):
         first_name=request.data['first_name'],
         last_name=request.data['last_name']
     )
-    # Now save the extra info in the levelupapi_gamer table
-    player = Player.objects.create(
-        user=new_user
-    )
-    # Use the REST Framework's token generator on the new user account
-    token = Token.objects.create(user=player.user)
-    # Return the token to the client
-    data = {
-        'valid': True,
-        'token': token.key,
-        'userId': player.id
-    }
+    already_registered = Player.objects.get(user__email=new_user.email)
+    if already_registered is not None:
+        data = {
+            "message": "email already in use"
+        }
+    else:
+        # Now save the extra info in the levelupapi_gamer table
+        player = Player.objects.create(
+            user=new_user
+        )
+        # Use the REST Framework's token generator on the new user account
+        token = Token.objects.create(user=player.user)
+        # Return the token to the client
+        data = {
+            'valid': True,
+            'token': token.key,
+            'userId': player.id
+        }
     return Response(data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def check_player_registered(self, request):
+    """get player by email for check prior to register"""
+    email= self.data['email']
+    authenticated_user = authenticate(email=email)
+    if authenticated_user is not None:
+        return Response({"message": "email in use"}, status=status.HTTP_200_OK)
+    else:
+        print("none")
+        return Response(None, status=status.HTTP_404_NOT_FOUND)
+    # try:
+    #     player = Player.objects.get(
+    #         user__email=request.query_params['email'])
+    #     serialized = PlayerProfileSerializer(player, many=False)
+    #     return Response(serialized.data, status=status.HTTP_200_OK)
+    # except Player.DoesNotExist as ex:
+    #     return Response(None, status=status.HTTP_404_NOT_FOUND)

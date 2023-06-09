@@ -49,7 +49,6 @@ class GameView(ViewSet):
 
     def create(self, request):
         """handles POST requests for game view"""
-        print(request.data)
         player_w = Player.objects.get(pk=request.data['player_w'])
         if request.data['player_b'] is not None:
             player_b = Player.objects.get(pk=request.data['player_b'])
@@ -82,32 +81,32 @@ class GameView(ViewSet):
         game.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['post'], detail=False)
-    def outcomes(self, request):
-        """creates game objects in api from arr sent from client tournament module"""
-        for outcome in request.data:
-            player_w = Player.objects.get(pk=outcome['player_w'])
-            player_b = Player.objects.get(pk=outcome['player_b'])
-            if outcome['winner'] is not None:
-                winner = Player.objects.get(pk=outcome['winner'])
-            else:
-                winner = None
-            tournament = Tournament.objects.get(pk=outcome['tournament'])
-            serialized = CreateGameSerializer(data=outcome)
-            serialized.is_valid(raise_exception=True)
-            serialized.save(player_w=player_w,
-                            player_b=player_b,
-                            tournament=tournament,
-                            winner=winner)
-        return Response(request.data, status=status.HTTP_201_CREATED)
-    @action(methods=['put'], detail=False)
-    def tournament_update(self, request):
-        """updates previously created game objects from client tournament module"""
-        for outcome in request.data:
-            player_w = Player.objects.get(pk=outcome['player_w'])
-            player_b = Player.objects.get(pk=outcome['player_b'])
-            game = Game.objects.get(tournament_round = outcome['tournament_round'], tournament_id=outcome['tournament'], player_w=player_w, player_b=player_b)
-            game.winner = outcome['winner']
-            game.win_style = outcome['win_style']
-            game.save()
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+    # @action(methods=['post'], detail=False)
+    # def outcomes(self, request):
+    #     """creates game objects in api from arr sent from client tournament module"""
+    #     for outcome in request.data:
+    #         player_w = Player.objects.get(pk=outcome['player_w'])
+    #         player_b = Player.objects.get(pk=outcome['player_b'])
+    #         if outcome['winner'] is not None:
+    #             winner = Player.objects.get(pk=outcome['winner'])
+    #         else:
+    #             winner = None
+    #         tournament = Tournament.objects.get(pk=outcome['tournament'])
+    #         serialized = CreateGameSerializer(data=outcome)
+    #         serialized.is_valid(raise_exception=True)
+    #         serialized.save(player_w=player_w,
+    #                         player_b=player_b,
+    #                         tournament=tournament,
+    #                         winner=winner)
+    #     return Response(request.data, status=status.HTTP_201_CREATED)
+    # @action(methods=['put'], detail=False)
+    # def tournament_update(self, request):
+    #     """updates previously created game objects from client tournament module"""
+    #     for outcome in request.data:
+    #         player_w = Player.objects.get(pk=outcome['player_w'])
+    #         player_b = Player.objects.get(pk=outcome['player_b'])
+    #         game = Game.objects.get(tournament_round = outcome['tournament_round'], tournament_id=outcome['tournament'], player_w=player_w, player_b=player_b)
+    #         game.winner = outcome['winner']
+    #         game.win_style = outcome['win_style']
+    #         game.save()
+    #     return Response(None, status=status.HTTP_204_NO_CONTENT)
