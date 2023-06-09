@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from rest_framework.decorators import action, permission_classes, api_view
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from datetime import datetime
 from django.db.models import Count, Q
@@ -101,22 +101,3 @@ class PlayerView(ViewSet):
         serialized = PlayerProfileSerializer(player, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
-    @api_view(['GET'])
-    @permission_classes([AllowAny])
-    def check_player_registered(self, request):
-        """get player by email for check prior to register"""
-        email= request.data['email']
-        authenticated_user = authenticate(email=email)
-        if authenticated_user is not None:
-            player = Player.objects.get(user__email = email)
-            serialized = PlayerSerializer(player, many=False)
-            return Response(serialized.data, status=status.HTTP_200_OK)
-        else:
-            return Response(None, status=status.HTTP_404_NOT_FOUND)
-        # try:
-        #     player = Player.objects.get(
-        #         user__email=request.query_params['email'])
-        #     serialized = PlayerProfileSerializer(player, many=False)
-        #     return Response(serialized.data, status=status.HTTP_200_OK)
-        # except Player.DoesNotExist as ex:
-        #     return Response(None, status=status.HTTP_404_NOT_FOUND)
