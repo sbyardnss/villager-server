@@ -13,4 +13,4 @@ WHERE id > 3
 
 UPDATE villager_chess_api_tournament
 SET rounds = 1
-WHERE id = 1
+WHERE id = 8

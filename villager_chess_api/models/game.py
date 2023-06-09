@@ -6,7 +6,7 @@ class Game(models.Model):
     player_w = models.ForeignKey(
         "Player", on_delete=models.CASCADE, related_name="games_as_white")
     player_b = models.ForeignKey(
-        "Player", on_delete=models.CASCADE, related_name="games_as_black")
+        "Player", on_delete=models.CASCADE, null=True, related_name="games_as_black")
     date_time = models.DateTimeField(auto_now=True)
     # w_notes = models.CharField(max_length=100, default="")
     # b_notes = models.CharField(max_length=100, default="", null=True, blank=True)
