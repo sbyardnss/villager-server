@@ -84,24 +84,24 @@ def register_user(request):
             'token': token.key,
             'userId': player.id
         }
-    return Response(data, status=status.HTTP_201_CREATED)
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def check_player_registered(request):
-    """get player by email for check prior to register"""
-    email = request.data['email']
-    authenticated_user = authenticate(email=email)
-    if authenticated_user is not None:
-        return Response({"message": "email in use"}, status=status.HTTP_200_OK)
-    else:
-        print("none")
-        return Response(None, status=status.HTTP_404_NOT_FOUND)
-    # try:
-    #     player = Player.objects.get(
-    #         user__email=request.query_params['email'])
-    #     serialized = PlayerProfileSerializer(player, many=False)
-    #     return Response(serialized.data, status=status.HTTP_200_OK)
-    # except Player.DoesNotExist as ex:
-    #     return Response(None, status=status.HTTP_404_NOT_FOUND)
+# @api_view(['GET'])
+# @permission_classes([AllowAny])
+# def check_player_registered(request):
+#     """get player by email for check prior to register"""
+#     email = request.data['email']
+#     authenticated_user = authenticate(email=email)
+#     if authenticated_user is not None:
+#         return Response({"message": "email in use"}, status=status.HTTP_200_OK)
+#     else:
+#         print("none")
+#         return Response(None, status=status.HTTP_404_NOT_FOUND)
+#     # try:
+#     #     player = Player.objects.get(
+#     #         user__email=request.query_params['email'])
+#     #     serialized = PlayerProfileSerializer(player, many=False)
+#     #     return Response(serialized.data, status=status.HTTP_200_OK)
+#     # except Player.DoesNotExist as ex:
+#     #     return Response(None, status=status.HTTP_404_NOT_FOUND)

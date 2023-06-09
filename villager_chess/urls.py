@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.conf.urls import include
 from django.urls import path
 from rest_framework import routers
-from villager_chess_api.views import PlayerView, GameView, CommunityPostView, MessageView, TimeSettingView, TournamentView, login_user, register_user, check_player_registered
+from villager_chess_api.views import PlayerView, GameView, CommunityPostView, MessageView, TimeSettingView, TournamentView, login_user, register_user
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'players', PlayerView, 'player')
@@ -30,7 +30,6 @@ router.register(r'communityposts', CommunityPostView, 'community_post')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register', register_user),
-    path('check', check_player_registered),
     path('login', login_user),
     path('', include(router.urls)),
 ]
