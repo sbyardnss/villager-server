@@ -30,7 +30,8 @@ class CreateGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ['id', 'date_time', 'is_tournament',
-                  'time_setting', 'tournament', 'win_style', 'winner', 'accepted', 'tournament_round', 'bye']
+                  'time_setting', 'tournament', 'win_style', 'winner', 'accepted', 'tournament_round', 'bye', 'pgn']
+
 
 class GameView(ViewSet):
     """handles rest requests for game objects"""
@@ -52,8 +53,10 @@ class GameView(ViewSet):
         player_w = Player.objects.get(pk=request.data['player_w'])
         if request.data['player_b'] is not None:
             player_b = Player.objects.get(pk=request.data['player_b'])
+
         serialized = CreateGameSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
+
         if request.data['player_b'] is not None:
             serialized.save(player_w=player_w, player_b=player_b)
         else:

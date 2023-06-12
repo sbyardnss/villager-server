@@ -11,7 +11,8 @@
             "winner": 1,
             "win_style": "checkmate",
             "accepted": true,
-            "bye": false
+            "bye": false,
+            "computer_opponent": false
         }
     },
     {
@@ -28,7 +29,8 @@
             "winner": 1,
             "win_style": "checkmate",
             "accepted": true,
-            "bye": false
+            "bye": false,
+            "computer_opponent": false
         }
     },
     {
@@ -45,7 +47,8 @@
             "winner": 3,
             "win_style": "checkmate",
             "accepted": true,
-            "bye": false
+            "bye": false,
+            "computer_opponent": false
         }
     }
 ]

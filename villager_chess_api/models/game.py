@@ -4,7 +4,7 @@ from django.db import models
 class Game(models.Model):
     """game model"""
     player_w = models.ForeignKey(
-        "Player", on_delete=models.CASCADE, related_name="games_as_white")
+        "Player", on_delete=models.CASCADE, null=True, related_name="games_as_white")
     player_b = models.ForeignKey(
         "Player", on_delete=models.CASCADE, null=True, related_name="games_as_black")
     date_time = models.DateTimeField(auto_now=True)
@@ -21,6 +21,7 @@ class Game(models.Model):
     win_style = models.CharField(max_length=20, blank=True)
     accepted = models.BooleanField(default=False)
     bye = models.BooleanField(default=False)
+    computer_opponent = models.BooleanField(default=False)
 
     @property
     def is_tournament(self):

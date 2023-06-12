@@ -21,3 +21,10 @@ WHERE ID > 4
 
 DELETE FROM auth_user
 WHERE ID > 4
+
+
+
+DELETE FROM authtoken_token 
+WHERE USER_ID = 15
+
+DELETE FROM villager_chess_api_player_friends where id > 13
