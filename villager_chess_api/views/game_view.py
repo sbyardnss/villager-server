@@ -69,8 +69,8 @@ class GameView(ViewSet):
     def update(self, request, pk=None):
         """handles PUT requests for game view"""
         game = Game.objects.get(pk=pk)
-        game.winner = request.data['winner']
-        if game.winner is not None:
+        game.winner_id = request.data['winner']
+        if game.winner_id is not None:
             game.win_style = "checkmate"
         else:
             game.win_style = "draw"
