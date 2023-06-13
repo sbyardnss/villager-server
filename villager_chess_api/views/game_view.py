@@ -30,7 +30,7 @@ class CreateGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ['id', 'date_time', 'is_tournament',
-                  'time_setting', 'tournament', 'win_style', 'winner', 'accepted', 'tournament_round', 'bye', 'pgn']
+                  'time_setting', 'tournament', 'win_style', 'winner', 'accepted', 'tournament_round', 'bye', 'pgn', 'computer_opponent']
 
 
 class GameView(ViewSet):
