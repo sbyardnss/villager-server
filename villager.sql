@@ -11,9 +11,9 @@ WHERE id > 1
 DELETE FROM villager_chess_api_game
 WHERE id > 3
 
-UPDATE villager_chess_api_tournament
-SET rounds = 1
-WHERE id = 15
+UPDATE villager_chess_api_game
+SET pgn = "1. d4 d6"
+WHERE id = 44
 
 
 DELETE FROM villager_chess_api_player
