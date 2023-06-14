@@ -22,7 +22,7 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
-                  'is_tournament', 'time_setting', 'winner', 'pgn', 'bye')
+                  'is_tournament', 'time_setting', 'winner', 'pgn', 'bye', 'accepted')
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
@@ -50,17 +50,16 @@ class GameView(ViewSet):
 
     def create(self, request):
         """handles POST requests for game view"""
-        player_w = Player.objects.get(pk=request.data['player_w'])
+        if request.data['player_w'] is not None:
+            player_w = Player.objects.get(pk=request.data['player_w'])
         if request.data['player_b'] is not None:
             player_b = Player.objects.get(pk=request.data['player_b'])
-
         serialized = CreateGameSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
-
-        if request.data['player_b'] is not None:
-            serialized.save(player_w=player_w, player_b=player_b)
-        else:
+        if request.data['player_w'] is not None:
             serialized.save(player_w=player_w)
+        if request.data['player_b'] is not None:
+            serialized.save(player_b=player_b)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, pk=None):
@@ -83,6 +82,14 @@ class GameView(ViewSet):
             game.pgn = request.data['pgn']
         game.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    @action(methods=['put'], detail=True)
+    def accept_challenge(self, request, pk=None):
+        game = Game.objects.get(pk=pk)
+        game.player_w = Player.objects.get(pk= request.data['player_w'])
+        game.player_b = Player.objects.get(pk= request.data['player_b'])
+        game.accepted = request.data['accepted']
+        game.save()
+        return Response({"message": "challenge accepted"}, status=status.HTTP_204_NO_CONTENT)
 
     # @action(methods=['post'], detail=False)
     # def outcomes(self, request):
