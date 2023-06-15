@@ -14,3 +14,4 @@ class Tournament(models.Model):
     complete = models.BooleanField(default=False)
     in_person = models.BooleanField(default=False)
     pairings = models.JSONField(default=list)
+

@@ -50,18 +50,7 @@ def register_user(request):
     # Create a new user by invoking the `create_user` helper method
     # on Django's built-in User model
 
-    # try:
-    #     player = Player.objects.get(
-    #         user__email=request.query_params['email'])
-    #     serialized = PlayerProfileSerializer(player, many=False)
-    #     return Response(serialized.data, status=status.HTTP_200_OK)
-    # except Player.DoesNotExist as ex:
-    #     return Response(None, status=status.HTTP_404_NOT_FOUND)
-    # already_registered = Player.objects.get(user__email=new_user.email)
-    # if already_registered is not None:
-    #     data = {
-    #         "message": "email already in use"
-    #     }
+
     if User.objects.filter(email=request.data['email']).exists():
         return Response({'error': 'Email already in use'}, status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -85,23 +74,3 @@ def register_user(request):
             'userId': player.id
         }
         return Response(data, status=status.HTTP_201_CREATED)
-
-
-# @api_view(['GET'])
-# @permission_classes([AllowAny])
-# def check_player_registered(request):
-#     """get player by email for check prior to register"""
-#     email = request.data['email']
-#     authenticated_user = authenticate(email=email)
-#     if authenticated_user is not None:
-#         return Response({"message": "email in use"}, status=status.HTTP_200_OK)
-#     else:
-#         print("none")
-#         return Response(None, status=status.HTTP_404_NOT_FOUND)
-#     # try:
-#     #     player = Player.objects.get(
-#     #         user__email=request.query_params['email'])
-#     #     serialized = PlayerProfileSerializer(player, many=False)
-#     #     return Response(serialized.data, status=status.HTTP_200_OK)
-#     # except Player.DoesNotExist as ex:
-#     #     return Response(None, status=status.HTTP_404_NOT_FOUND)
