@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
+from rest_framework.decorators import action
 
 from villager_chess_api.models import Tournament, Player, TimeSetting, Game
 
@@ -69,3 +70,9 @@ class TournamentView(ViewSet):
         tournament.rounds = request.data['rounds']
         tournament.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    @action(methods=['get'], detail=False)
+    def my_tournaments(self, request):
+        player = Player.objects.get(user = request.auth.user)
+        tournaments = Tournament.objects.filter(competitors = player)
+        serialized = TournamentSerializer(tournaments, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
