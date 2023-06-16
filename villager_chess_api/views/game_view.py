@@ -89,3 +89,9 @@ class GameView(ViewSet):
         game.accepted = request.data['accepted']
         game.save()
         return Response({"message": "challenge accepted"}, status=status.HTTP_204_NO_CONTENT)
+    @action(methods=['get'], detail=False)
+    def my_games(self, request):
+        player = Player.objects.get(user = request.auth.user)
+        games = Game.objects.filter(Q(player_w__id = player.id) | Q(player_b__id = player.id))
+        serialized = GameSerializer(games, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
