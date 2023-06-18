@@ -77,7 +77,7 @@ class GameView(ViewSet):
             game.win_style = "draw"
         # game.w_notes = request.data['w_notes']
         # game.b_notes = request.data['b_notes']
-        if game.pgn is not None:
+        if request.data['pgn'] is not None:
             game.pgn = request.data['pgn']
         game.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
