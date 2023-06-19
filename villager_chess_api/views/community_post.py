@@ -6,7 +6,7 @@ from villager_chess_api.models import Player, CommunityPost
 class PosterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ('id', 'full_name')
+        fields = ('id', 'full_name', 'username')
 
 class CommunityPostSerializer(serializers.ModelSerializer):
     poster = PosterSerializer(many=False)

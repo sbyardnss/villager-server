@@ -22,7 +22,7 @@ class Game(models.Model):
     accepted = models.BooleanField(default=False)
     bye = models.BooleanField(default=False)
     computer_opponent = models.BooleanField(default=False)
-
+    # turn = models.CharField(default="white", null=True)
     @property
     def is_tournament(self):
         '''add boolean property to check if this game is part of a tournament'''
