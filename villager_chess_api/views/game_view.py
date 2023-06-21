@@ -11,7 +11,7 @@ from villager_chess_api.models import Player, Game, Tournament, TimeSetting
 class PlayerOnGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ('id', 'full_name')
+        fields = ('id', 'full_name', 'username')
 
 
 class GameSerializer(serializers.ModelSerializer):
