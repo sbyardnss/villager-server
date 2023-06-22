@@ -3,17 +3,17 @@ SET date_time = "2023-06-01 21:22:25.057000"
 WHERE id = 1
 
 DELETE FROM villager_chess_api_tournament_competitors
-WHERE id > 4
+WHERE id > 77
 
 DELETE FROM villager_chess_api_tournament
-WHERE id > 1
+WHERE id > 15
 
 DELETE FROM villager_chess_api_game
-WHERE id > 132
+WHERE id > 45
 
 UPDATE villager_chess_api_tournament
 SET rounds = 1
-WHERE ID = 16
+WHERE ID = 18
 
 
 DELETE FROM villager_chess_api_player
