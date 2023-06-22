@@ -22,7 +22,7 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
-                  'is_tournament', 'time_setting', 'winner', 'pgn', 'bye', 'accepted')
+                  'is_tournament', 'time_setting', 'winner', 'pgn', 'bye', 'accepted', 'win_style')
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
@@ -93,5 +93,10 @@ class GameView(ViewSet):
     def my_games(self, request):
         player = Player.objects.get(user = request.auth.user)
         games = Game.objects.filter(Q(player_w__id = player.id) | Q(player_b__id = player.id))
+        serialized = GameSerializer(games, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+    @action(methods=['get'], detail=True)
+    def get_selected_tournament_games(self, request, pk=None):
+        games = Game.objects.filter(tournament=pk)
         serialized = GameSerializer(games, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
