@@ -6,14 +6,14 @@ DELETE FROM villager_chess_api_tournament_competitors
 WHERE id > 110
 
 DELETE FROM villager_chess_api_tournament
-WHERE id > 21
+WHERE id > 26
 
 DELETE FROM villager_chess_api_game
 WHERE id = 437
 
 UPDATE villager_chess_api_tournament
-SET rounds = 1
-WHERE ID = 14
+SET complete = 0
+WHERE ID = 1
 
 
 DELETE FROM villager_chess_api_player
@@ -38,3 +38,6 @@ WHERE ID = 426
 UPDATE villager_chess_api_game
 SET win_style = ''
 WHERE ID = 131
+
+DELETE FROM villager_chess_api_game
+WHERE tournament_id = 32
