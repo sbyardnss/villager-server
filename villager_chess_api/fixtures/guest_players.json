@@ -1,0 +1,9 @@
+[
+    {
+        "model": "villager_chess_api.guestplayer",
+        "pk": 1,
+        "fields": {
+            "name": "Bob Ross"
+        }
+    }
+]

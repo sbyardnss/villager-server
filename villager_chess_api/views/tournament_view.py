@@ -25,7 +25,6 @@ class GameTournamentSerializer(serializers.ModelSerializer):
 class TournamentSerializer(serializers.ModelSerializer):
     creator = PlayerSerializer(many=False)
     games = GameTournamentSerializer(many=True)
-
     class Meta:
         model = Tournament
         fields = ('id', 'title', 'creator', 'games', 'time_setting',
@@ -76,3 +75,9 @@ class TournamentView(ViewSet):
         tournaments = Tournament.objects.filter(competitors = player)
         serialized = TournamentSerializer(tournaments, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
+    @action(methods=['put'], detail=True)
+    def end_tournament(self, request, pk=None):
+        tournament = Tournament.objects.get(pk=pk)
+        tournament.complete = True
+        tournament.save()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
