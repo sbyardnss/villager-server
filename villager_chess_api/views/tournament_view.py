@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.decorators import action
 
-from villager_chess_api.models import Tournament, Player, TimeSetting, Game
+from villager_chess_api.models import Tournament, Player, TimeSetting, Game, GuestPlayer
 
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -11,6 +11,10 @@ class PlayerSerializer(serializers.ModelSerializer):
         model = Player
         fields = ('id', 'full_name')
 
+class GuestPlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GuestPlayer
+        fields = ('id', 'full_name', 'guest_id')
 
 class GameTournamentSerializer(serializers.ModelSerializer):
     player_w = PlayerSerializer(many=False)
@@ -25,10 +29,11 @@ class GameTournamentSerializer(serializers.ModelSerializer):
 class TournamentSerializer(serializers.ModelSerializer):
     creator = PlayerSerializer(many=False)
     games = GameTournamentSerializer(many=True)
+    guest_competitors = GuestPlayerSerializer(many=True)
     class Meta:
         model = Tournament
         fields = ('id', 'title', 'creator', 'games', 'time_setting',
-                  'complete', 'competitors', 'rounds', 'pairings', 'in_person')
+                  'complete', 'competitors', 'guest_competitors', 'rounds', 'pairings', 'in_person')
 
 
 class CreateTournamentSerializer(serializers.ModelSerializer):
@@ -57,10 +62,11 @@ class TournamentView(ViewSet):
         creator = Player.objects.get(user=request.auth.user)
         time_setting = TimeSetting.objects.get(pk=request.data['timeSetting'])
         competitor_list = request.data['competitors']
+        guest_competitor_list = request.data['guest_competitors']
         serialized = CreateTournamentSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
         serialized.save(creator=creator, time_setting=time_setting,
-                        competitors=competitor_list)
+                        competitors=competitor_list, guest_competitors = guest_competitor_list)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None):

@@ -6,7 +6,7 @@ DELETE FROM villager_chess_api_tournament_competitors
 WHERE tournament_id = 25
 
 DELETE FROM villager_chess_api_tournament
-WHERE id > 26
+WHERE id = 33
 
 DELETE FROM villager_chess_api_game
 WHERE id = 437
