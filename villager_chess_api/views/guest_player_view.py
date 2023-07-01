@@ -6,15 +6,16 @@ from villager_chess_api.models import GuestPlayer
 class GuestPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = GuestPlayer
-        fields = ('id', 'name', 'guest_id')
+        fields = ('id', 'full_name', 'guest_id')
 
 class CreateGuestPlayerSerializer(serializers.ModelSerializer):
     class Meta: 
-        fields = ['id', 'name']
+        fields = ['id', 'full_name']
 class GuestView(ViewSet):
     """handles rest requests for guest users for tournament participation"""
     def list(self, pk=None):
         guests = GuestPlayer.objects.all()
+        print(guests)
         serialized = GuestPlayerSerializer(guests, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
     def retrieve(self, request, pk=None):
