@@ -5,7 +5,8 @@ from rest_framework.decorators import action
 from datetime import datetime
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
-from villager_chess_api.models import Player, Game, Tournament, TimeSetting
+from villager_chess_api.models import Player, GuestPlayer, Game, Tournament, TimeSetting
+from django.contrib.contenttypes.models import ContentType
 
 
 class PlayerOnGameSerializer(serializers.ModelSerializer):
@@ -29,7 +30,10 @@ class CreateGameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ['id', 'date_time', 'time_setting', 'tournament', 'win_style', 'winner', 'accepted', 'tournament_round', 'bye', 'pgn', 'computer_opponent']
+        fields = ['id', 'date_time', 'time_setting', 'tournament', 'win_style',
+                  'winner', 'accepted', 'tournament_round', 'bye', 'pgn', 'computer_opponent']
+# this line gets
+# print(ContentType.objects.get_for_model(GuestPlayer).id)
 
 
 class GameView(ViewSet):
@@ -48,17 +52,59 @@ class GameView(ViewSet):
         return Response(serialized.data, status=status.HTTP_200_OK)
 
     def create(self, request):
+        print(request.data)
         """handles POST requests for game view"""
+        # if request.data['player_w'] is not None:
+        #     player_w = Player.objects.get(pk=request.data['player_w'])
+        # if request.data['player_b'] is not None:
+        #     player_b = Player.objects.get(pk=request.data['player_b'])
+
         if request.data['player_w'] is not None:
-            player_w = Player.objects.get(pk=request.data['player_w'])
+            if request.data['player_w_model_type'] == 'guestplayer':
+                numeric_guest_id = int(request.data['player_w'].split('g')[1])
+                target_player_w_id = GuestPlayer.objects.get(
+                    pk=numeric_guest_id).id
+                target_player_w_ct = ContentType.objects.get_for_model(
+                    GuestPlayer).id
+            else:
+                target_player_w_id = Player.objects.get(
+                    pk=request.data['player_w']).id
+                target_player_w_ct = ContentType.objects.get_for_model(
+                    Player).id
         if request.data['player_b'] is not None:
-            player_b = Player.objects.get(pk=request.data['player_b'])
+            if request.data['player_b_model_type'] == 'guestplayer':
+                numeric_guest_id = int(request.data['player_b'].split('g')[1])
+                target_player_b_id = GuestPlayer.objects.get(
+                    pk=numeric_guest_id).id
+                target_player_b_ct = ContentType.objects.get_for_model(
+                    GuestPlayer).id
+            else:
+                target_player_b_id = Player.objects.get(
+                    pk=request.data['player_b']).id
+                target_player_b_ct = ContentType.objects.get_for_model(
+                    Player).id
+        if request.data['winner'] is not None:
+            if request.data['winner_model_type'] == 'guestplayer':
+                numeric_guest_id = int(request.data['winner'].split('g')[1])
+                target_winner_id = GuestPlayer.objects.get(
+                    pk=numeric_guest_id).id
+                target_winner_ct = ContentType.objects.get_for_model(
+                    GuestPlayer)
+            else:
+                target_winner_id = Player.objects.get(
+                    pk=request.data['winner']).id
+                target_winner_ct = ContentType.objects.get_for_model(Player)
         serialized = CreateGameSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
         if request.data['player_w'] is not None:
-            serialized.save(player_w=player_w)
+            serialized.save(target_player_w_id=target_player_w_id,
+                            target_player_w_ct=target_player_w_ct)
         if request.data['player_b'] is not None:
-            serialized.save(player_b=player_b)
+            serialized.save(target_player_b_id=target_player_b_id,
+                            target_player_b_ct=target_player_b_ct)
+        if request.dat['winner'] is not None:
+            serialized.save(target_winner_id=target_winner_id,
+                            target_winner_ct=target_winner_ct)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, pk=None):
@@ -81,20 +127,24 @@ class GameView(ViewSet):
             game.pgn = request.data['pgn']
         game.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
     @action(methods=['put'], detail=True)
     def accept_challenge(self, request, pk=None):
         game = Game.objects.get(pk=pk)
-        game.player_w = Player.objects.get(pk= request.data['player_w'])
-        game.player_b = Player.objects.get(pk= request.data['player_b'])
+        game.player_w = Player.objects.get(pk=request.data['player_w'])
+        game.player_b = Player.objects.get(pk=request.data['player_b'])
         game.accepted = request.data['accepted']
         game.save()
         return Response({"message": "challenge accepted"}, status=status.HTTP_204_NO_CONTENT)
+
     @action(methods=['get'], detail=False)
     def my_games(self, request):
-        player = Player.objects.get(user = request.auth.user)
-        games = Game.objects.filter(Q(player_w__id = player.id) | Q(player_b__id = player.id))
+        player = Player.objects.get(user=request.auth.user)
+        games = Game.objects.filter(
+            Q(player_w__id=player.id) | Q(player_b__id=player.id))
         serialized = GameSerializer(games, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
+
     @action(methods=['get'], detail=True)
     def get_selected_tournament_games(self, request, pk=None):
         games = Game.objects.filter(tournament=pk)
