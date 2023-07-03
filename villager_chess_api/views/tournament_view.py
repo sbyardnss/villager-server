@@ -28,7 +28,7 @@ class GameTournamentSerializer(serializers.ModelSerializer):
 
 class TournamentSerializer(serializers.ModelSerializer):
     creator = PlayerSerializer(many=False)
-    games = GameTournamentSerializer(many=True)
+    # games = GameTournamentSerializer(many=True)
     guest_competitors = GuestPlayerSerializer(many=True)
     class Meta:
         model = Tournament
