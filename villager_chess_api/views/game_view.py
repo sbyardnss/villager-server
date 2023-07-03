@@ -27,13 +27,12 @@ class GameSerializer(serializers.ModelSerializer):
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Game
         fields = ['id', 'date_time', 'time_setting', 'tournament', 'win_style',
-                  'winner', 'accepted', 'tournament_round', 'bye', 'pgn', 'computer_opponent']
+                  'accepted', 'tournament_round', 'bye', 'pgn', 'computer_opponent']
 # this line gets
-# print(ContentType.objects.get_for_model(GuestPlayer).id)
+# print(ContentType.objects.get_for_model(GuestPlayer).model)
 
 
 class GameView(ViewSet):
@@ -52,32 +51,33 @@ class GameView(ViewSet):
         return Response(serialized.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-        print(request.data)
+        # print(request.data)
         """handles POST requests for game view"""
         # if request.data['player_w'] is not None:
         #     player_w = Player.objects.get(pk=request.data['player_w'])
         # if request.data['player_b'] is not None:
         #     player_b = Player.objects.get(pk=request.data['player_b'])
-
         if request.data['player_w'] is not None:
             if request.data['player_w_model_type'] == 'guestplayer':
                 numeric_guest_id = int(request.data['player_w'].split('g')[1])
                 target_player_w_id = GuestPlayer.objects.get(
                     pk=numeric_guest_id).id
                 target_player_w_ct = ContentType.objects.get_for_model(
-                    GuestPlayer).id
+                    GuestPlayer)
             else:
                 target_player_w_id = Player.objects.get(
                     pk=request.data['player_w']).id
                 target_player_w_ct = ContentType.objects.get_for_model(
-                    Player).id
+                    Player)
+                # print(f'{target_player_w_ct} {target_player_w_id}')
         if request.data['player_b'] is not None:
             if request.data['player_b_model_type'] == 'guestplayer':
                 numeric_guest_id = int(request.data['player_b'].split('g')[1])
                 target_player_b_id = GuestPlayer.objects.get(
                     pk=numeric_guest_id).id
                 target_player_b_ct = ContentType.objects.get_for_model(
-                    GuestPlayer).id
+                    GuestPlayer)
+                # print(f'{target_player_b_ct} {target_player_b_id}')
             else:
                 target_player_b_id = Player.objects.get(
                     pk=request.data['player_b']).id
@@ -99,13 +99,23 @@ class GameView(ViewSet):
         if request.data['player_w'] is not None:
             serialized.save(target_player_w_id=target_player_w_id,
                             target_player_w_ct=target_player_w_ct)
+        else:
+            serialized.save(target_player_w_id=None,
+                            target_player_w_ct=None)
         if request.data['player_b'] is not None:
             serialized.save(target_player_b_id=target_player_b_id,
                             target_player_b_ct=target_player_b_ct)
-        if request.dat['winner'] is not None:
+        else:
+            serialized.save(target_player_b_id=None,
+                            target_player_b_ct=None)
+        if request.data['winner'] is not None:
             serialized.save(target_winner_id=target_winner_id,
                             target_winner_ct=target_winner_ct)
+        else:
+            serialized.save(target_winner_id=None,
+                            target_winner_ct=None)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
+
 
     def destroy(self, request, pk=None):
         """handles DELETE requests for game view"""

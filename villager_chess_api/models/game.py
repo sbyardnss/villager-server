@@ -14,7 +14,6 @@ class Game(models.Model):
 
     # beginning of multiple models on fk field code
     limit = models.Q(model='Player') | models.Q(model='GuestPlayer')
-
     target_player_w_id = models.PositiveIntegerField(null=True)
     target_player_w_ct = models.ForeignKey(
         ContentType, limit_choices_to=limit, null=True, related_name="player_w", on_delete=models.CASCADE)
@@ -56,3 +55,5 @@ class Game(models.Model):
     @is_tournament.setter
     def is_tournament(self, value):
         self.__is_tournament = value
+
+
