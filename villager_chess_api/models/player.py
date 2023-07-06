@@ -1,9 +1,12 @@
 from django.db import models
+from villager_chess_api.models import Game
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.fields import GenericRelation
 
 class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     friends = models.ManyToManyField('Player', related_name='followers')
+    games = GenericRelation(Game)
     @property
     def full_name(self):
         """full name custom property"""
