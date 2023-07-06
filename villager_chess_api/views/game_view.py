@@ -47,9 +47,6 @@ class PlayerObjectRelatedField(serializers.RelatedField):
 
 
 class GameSerializer(serializers.ModelSerializer):
-    # player_w = PlayerOnGameSerializer(many=False)
-    # player_b = PlayerOnGameSerializer(many=False)
-    # winner = PlayerOnGameSerializer(many=False)
     player_w = PlayerObjectRelatedField(many=False, read_only=True)
     player_b = PlayerObjectRelatedField(many=False, read_only=True)
     winner = PlayerObjectRelatedField(many=False, read_only=True)
