@@ -113,7 +113,7 @@ class GameView(ViewSet):
                 target_player_b_id = Player.objects.get(
                     pk=request.data['player_b']).id
                 target_player_b_ct = ContentType.objects.get_for_model(
-                    Player).id
+                    Player)
         if request.data['winner'] is not None:
             if request.data['winner_model_type'] == 'guestplayer':
                 numeric_guest_id = int(request.data['winner'].split('g')[1])
