@@ -9,20 +9,23 @@ from villager_chess_api.models import Player, GuestPlayer, Game, Tournament, Tim
 from django.contrib.contenttypes.models import ContentType
 
 
-
 class PlayerOnGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ('id', 'full_name', 'username')
+
+
 class GuestOnGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = GuestPlayer
         fields = ('id', 'full_name', 'guest_id')
 
+
 class PlayerObjectRelatedField(serializers.RelatedField):
     """
     A custom field to use for the `tagged_object` generic relationship.
     """
+
     def to_representation(self, value):
         """
         Serialize tagged objects to a simple textual representation.
@@ -50,11 +53,11 @@ class GameSerializer(serializers.ModelSerializer):
     player_w = PlayerObjectRelatedField(many=False, read_only=True)
     player_b = PlayerObjectRelatedField(many=False, read_only=True)
     winner = PlayerObjectRelatedField(many=False, read_only=True)
-    
+
     class Meta:
         model = Game
-        fields = ('id', 'player_w', 'target_player_w_ct', 'player_b', 'target_player_b_ct', 'date_time', 'tournament', 'tournament_round',
-                  'is_tournament', 'time_setting', 'winner', 'target_winner_ct', 'pgn', 'bye', 'accepted', 'win_style')
+        fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
+                  'is_tournament', 'time_setting', 'winner', 'pgn', 'bye', 'accepted', 'win_style', 'target_winner_ct', 'target_player_b_ct', 'target_player_w_ct')  # removed target_winner_ct, target_player_b_ct, target_player_w_ct
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
@@ -147,7 +150,6 @@ class GameView(ViewSet):
                             target_winner_ct=None)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
 
-
     def destroy(self, request, pk=None):
         """handles DELETE requests for game view"""
         game = Game.objects.get(pk=pk)
@@ -156,14 +158,40 @@ class GameView(ViewSet):
 
     def update(self, request, pk=None):
         """handles PUT requests for game view"""
+        # game = Game.objects.get(pk=pk)
+        # game.winner_id = request.data['winner']
+        # if game.winner_id is not None:
+        #     game.win_style = "checkmate"
+        # else:
+        #     game.win_style = "draw"
+        # # game.w_notes = request.data['w_notes']
+        # # game.b_notes = request.data['b_notes']
+        # if request.data['pgn'] is not None:
+        #     game.pgn = request.data['pgn']
+        # game.save()
+        # return Response(None, status=status.HTTP_204_NO_CONTENT)
         game = Game.objects.get(pk=pk)
-        game.winner_id = request.data['winner']
-        if game.winner_id is not None:
-            game.win_style = "checkmate"
+        # print(game.target_winner_ct)
+        if request.data['winner_model_type'] == 'guestplayer':
+            numeric_guest_id = int(request.data['winner'].split('g')[1])
+            target_winner_id = GuestPlayer.objects.get(
+                pk=numeric_guest_id).id
+            target_winner_ct = ContentType.objects.get_for_model(
+                GuestPlayer)
+            game.save(target_winner_ct=target_winner_ct,
+                      target_winner_id=target_winner_id)
+        elif request.data['winner'] is None and request.data['win_style'] == 'draw':
+            game.win_style = request.data['win_style']
+            game.save(target_winner_id=None,
+                      target_winner_ct=None)
+            # game.save(target_winner_ct=target_winner_ct,
+            #           target_winner_id=target_winner_id)
         else:
-            game.win_style = "draw"
-        # game.w_notes = request.data['w_notes']
-        # game.b_notes = request.data['b_notes']
+            target_winner_id = Player.objects.get(
+                pk=request.data['winner']).id
+            target_winner_ct = ContentType.objects.get_for_model(Player)
+            game.update({'target_winner_ct':target_winner_ct,
+                      'target_winner_id':target_winner_id})
         if request.data['pgn'] is not None:
             game.pgn = request.data['pgn']
         game.save()
