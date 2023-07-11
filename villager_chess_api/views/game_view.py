@@ -178,23 +178,24 @@ class GameView(ViewSet):
                 pk=numeric_guest_id).id
             target_winner_ct = ContentType.objects.get_for_model(
                 GuestPlayer)
-            game.save(target_winner_ct=target_winner_ct,
-                      target_winner_id=target_winner_id)
+            game.target_winner_id = target_winner_id
+            game.target_winner_ct = target_winner_ct
+            game.save()
         elif request.data['winner'] is None and request.data['win_style'] == 'draw':
             game.win_style = request.data['win_style']
-            game.save(target_winner_id=None,
-                      target_winner_ct=None)
-            # game.save(target_winner_ct=target_winner_ct,
-            #           target_winner_id=target_winner_id)
+            game.target_winner_ct = None
+            game.target_winner_id = None
+            game.save()
         else:
             target_winner_id = Player.objects.get(
                 pk=request.data['winner']).id
             target_winner_ct = ContentType.objects.get_for_model(Player)
-            game.update({'target_winner_ct':target_winner_ct,
-                      'target_winner_id':target_winner_id})
+            game.target_winner_ct = target_winner_ct
+            game.target_winner_id = target_winner_id
+            game.save()
         if request.data['pgn'] is not None:
-            game.pgn = request.data['pgn']
-        game.save()
+            game.save(pgn=request.data['pgn'])
+        # game.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['put'], detail=True)
