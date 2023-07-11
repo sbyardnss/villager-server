@@ -9,7 +9,7 @@ DELETE FROM villager_chess_api_tournament
 WHERE id > 1
 
 DELETE FROM villager_chess_api_game
-WHERE id > 488
+WHERE id > 494
 
 UPDATE villager_chess_api_tournament
 SET complete = 0
@@ -22,7 +22,9 @@ WHERE ID > 4
 DELETE FROM auth_user
 WHERE ID > 4
 
-
+update villager_chess_api_tournament
+SET rounds = 2
+Where id = 38
 
 DELETE FROM authtoken_token 
 WHERE USER_ID = 15
