@@ -7,11 +7,6 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 #     print(c.pk)
 class Game(models.Model):
     """game model"""
-    # player_w = models.ForeignKey(
-    #     "Player", on_delete=models.CASCADE, null=True, related_name="games_as_white")
-    # player_b = models.ForeignKey(
-    #     "Player", on_delete=models.CASCADE, null=True, related_name="games_as_black")
-
     # beginning of multiple models on fk field code
     limit = models.Q(model='Player') | models.Q(model='GuestPlayer')
     target_player_w_id = models.PositiveIntegerField(null=True)
@@ -39,14 +34,12 @@ class Game(models.Model):
     time_setting = models.ForeignKey(
         'TimeSetting', on_delete=models.SET_NULL, null=True, blank=True)
     pgn = models.CharField(max_length=400, null=True, blank=True)
-    # winner = models.ForeignKey(
-    #     "Player", on_delete=models.SET_NULL, null=True, blank=True, related_name="wins")
     win_style = models.CharField(max_length=20, blank=True)
     accepted = models.BooleanField(default=False)
     bye = models.BooleanField(default=False)
     computer_opponent = models.BooleanField(default=False)
-    # turn = models.CharField(default="white", null=True)
-
+    # turn = models.CharField(default="w", null=True)
+    
     @property
     def is_tournament(self):
         '''add boolean property to check if this game is part of a tournament'''
