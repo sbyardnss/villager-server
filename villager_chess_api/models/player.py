@@ -7,6 +7,7 @@ class Player(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     friends = models.ManyToManyField('Player', related_name='followers')
     games = GenericRelation(Game)
+    clubs = models.ManyToManyField('ChessClub', related_name='registered_members')
     @property
     def full_name(self):
         """full name custom property"""

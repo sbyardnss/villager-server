@@ -15,4 +15,5 @@ class Tournament(models.Model):
     complete = models.BooleanField(default=False)
     in_person = models.BooleanField(default=False)
     pairings = models.JSONField(default=list)
+    club = models.ForeignKey('ChessClub', on_delete=models.CASCADE, related_name='club_tournaments')
 

@@ -68,3 +68,5 @@ class ChessClubView(ViewSet):
         club = ChessClub.objects.get(pk=pk)
         club.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    
