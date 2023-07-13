@@ -75,6 +75,7 @@ class TournamentView(ViewSet):
         tournament.rounds = request.data['rounds']
         tournament.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
     @action(methods=['get'], detail=False)
     def my_tournaments(self, request):
         player = Player.objects.get(user = request.auth.user)
