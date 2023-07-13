@@ -28,7 +28,7 @@ class CreateChessClubSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChessClub
         fields = ['id', 'name', 'address',
-                  'city', 'state', 'zipcode', 'details', 'password', 'members']
+                  'city', 'state', 'zipcode', 'details', 'password']
 
 
 class ChessClubView(ViewSet):
@@ -50,7 +50,7 @@ class ChessClubView(ViewSet):
         manager = Player.objects.get(user=request.auth.user)
         serialized = CreateChessClubSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
-        serialized.save(manager=manager, guest_members = [])
+        serialized.save(manager=manager, guest_members = [], members = [manager])
         return Response(serialized.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None):
