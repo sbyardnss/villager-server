@@ -10,7 +10,14 @@
             "city": "Nashville", 
             "state": "TN",
             "zipcode": "37212",
-            "details": "Wednesdays from 7 til whenever. Weekly tournament. All guests welcome!"
+            "details": "Wednesdays from 7 til whenever. Weekly tournament. All guests welcome!",
+            "password": "gumboTime",
+            "members": [
+                1,
+                3,
+                4
+            ],
+            "guest_members": []
         }
     }
 ]

@@ -21,14 +21,14 @@ class ChessClubSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChessClub
         fields = ('id', 'name', 'manager', 'date',
-                  'address', 'city', 'state', 'zipcode', 'details')
+                  'address', 'city', 'state', 'zipcode', 'details', 'members', 'guest_members')
 
 
 class CreateChessClubSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChessClub
         fields = ['id', 'name', 'address',
-                  'city', 'state', 'zipcode', 'details']
+                  'city', 'state', 'zipcode', 'details', 'password', 'members']
 
 
 class ChessClubView(ViewSet):
@@ -50,7 +50,7 @@ class ChessClubView(ViewSet):
         manager = Player.objects.get(user=request.auth.user)
         serialized = CreateChessClubSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
-        serialized.save(manager=manager)
+        serialized.save(manager=manager, guest_members = [])
         return Response(serialized.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None):
@@ -60,6 +60,7 @@ class ChessClubView(ViewSet):
         club.state = request.data['state']
         club.zipcode = request.data['zipcode']
         club.details = request.data['details']
+        club.password = request.data['password']
         club.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 

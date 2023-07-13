@@ -11,3 +11,6 @@ class ChessClub(models.Model):
     state = models.CharField(max_length=5, null=True)
     zipcode = models.PositiveIntegerField(null=True)
     details = models.CharField(null=True, max_length=100)
+    password = models.CharField(null=True, max_length=20)
+    members = models.ManyToManyField('Player', related_name='my_clubs')
+    guest_members = models.ManyToManyField('GuestPlayer', related_name='selected_guests_tournaments')
