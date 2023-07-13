@@ -4,7 +4,7 @@ from django.db import models
 class ChessClub(models.Model):
     name = models.CharField(max_length=30)
     manager = models.ForeignKey(
-        'Player', on_delete=models.SET_NULL, related_name='created_clubs', null=True)
+        'Player', on_delete=models.SET_NULL, related_name='created_clubs', null=True, default=1)
     date = models.DateField(auto_now=True)
     address = models.CharField(max_length=75, null=True)
     city = models.CharField(max_length=30, null=True)

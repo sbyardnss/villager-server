@@ -17,7 +17,9 @@
                 3,
                 4
             ],
-            "guest_members": []
+            "guest_members": [
+                1
+            ]
         }
     }
 ]

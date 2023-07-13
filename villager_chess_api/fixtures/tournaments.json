@@ -54,7 +54,8 @@
                     "player1": 1,
                     "player2": null
                 }
-            ]
+            ],
+            "club": 1
         }
     }
 ]

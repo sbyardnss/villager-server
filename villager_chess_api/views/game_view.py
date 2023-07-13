@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 from villager_chess_api.models import Player, GuestPlayer, Game, Tournament, TimeSetting
 from django.contrib.contenttypes.models import ContentType
 
-
 class PlayerOnGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
@@ -214,7 +213,7 @@ class GameView(ViewSet):
     def my_games(self, request):
         player = Player.objects.get(user=request.auth.user)
         games = Game.objects.filter(
-            Q(target_player_w_ct_id = 9) & Q(target_player_w_id = player.id) | Q(target_player_b_ct_id = 9) & Q(target_player_b_id = player.id))
+            Q(target_player_w_ct_id = 11) & Q(target_player_w_id = player.id) | Q(target_player_b_ct_id = 11) & Q(target_player_b_id = player.id))
         serialized = GameSerializer(games, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
