@@ -69,4 +69,10 @@ class ChessClubView(ViewSet):
         club.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    @action(methods=['get'], detail=False)
+    def my_clubs(self, request):
+        player = Player.objects.get(user = request.auth.user)
+        clubs = ChessClub.objects.filter(members = player)
+        serialized = ChessClubSerializer(clubs, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
     
