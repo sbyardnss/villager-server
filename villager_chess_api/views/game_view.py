@@ -57,7 +57,7 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
-                  'is_tournament', 'time_setting', 'winner', 'pgn', 'bye', 'accepted', 'win_style', 'target_winner_ct', 'target_player_b_ct', 'target_player_w_ct')  # removed target_winner_ct, target_player_b_ct, target_player_w_ct
+                  'time_setting', 'winner', 'pgn', 'bye', 'accepted', 'win_style', 'target_winner_ct', 'target_player_b_ct', 'target_player_w_ct')  # removed target_winner_ct, target_player_b_ct, target_player_w_ct
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
@@ -75,6 +75,7 @@ class GameView(ViewSet):
     def list(self, request):
         """handles GET requests for all games"""
         games = Game.objects.all()
+        
         serialized = GameSerializer(games, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
@@ -213,7 +214,7 @@ class GameView(ViewSet):
     def my_games(self, request):
         player = Player.objects.get(user=request.auth.user)
         games = Game.objects.filter(
-            Q(player_w__id=player.id) | Q(player_b__id=player.id))
+            Q(target_player_w_ct_id = 9) & Q(target_player_w_id = player.id) | Q(target_player_b_ct_id = 9) & Q(target_player_b_id = player.id))
         serialized = GameSerializer(games, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
