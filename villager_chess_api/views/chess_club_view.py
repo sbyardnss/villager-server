@@ -17,7 +17,7 @@ class PlayerOnClubSerializer(serializers.ModelSerializer):
 
 class ChessClubSerializer(serializers.ModelSerializer):
     manager = PlayerOnClubSerializer(many=False)
-
+    members = PlayerOnClubSerializer(many=True)
     class Meta:
         model = ChessClub
         fields = ('id', 'name', 'manager', 'date',
