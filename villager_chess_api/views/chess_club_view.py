@@ -83,4 +83,3 @@ class ChessClubView(ViewSet):
         clubs = ChessClub.objects.filter(members = player)
         serialized = ChessClubSerializer(clubs, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
-    
