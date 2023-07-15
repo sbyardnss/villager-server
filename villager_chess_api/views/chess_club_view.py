@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 from villager_chess_api.models import Player, GuestPlayer, Game, Tournament, TimeSetting, ChessClub
 from django.contrib.contenttypes.models import ContentType
 
-
 class PlayerOnClubSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
@@ -55,14 +54,23 @@ class ChessClubView(ViewSet):
 
     def update(self, request, pk=None):
         club = ChessClub.objects.get(pk=pk)
-        club.name = request.data['name']
-        club.address = request.data['address']
-        club.state = request.data['state']
-        club.zipcode = request.data['zipcode']
-        club.details = request.data['details']
-        club.password = request.data['password']
-        club.save()
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        try:
+            if request.data['oldPassword'] == club.password:
+                club.name = request.data['name']
+                club.address = request.data['address']
+                club.state = request.data['state']
+                club.zipcode = request.data['zipcode']
+                club.details = request.data['details']
+                club.password = request.data['newPassword']
+                club.save()
+                return Response(None, status=status.HTTP_204_NO_CONTENT)
+        except ValueError as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        except KeyError as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        except AssertionError as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+
 
     def destroy(self, request, pk=None):
         club = ChessClub.objects.get(pk=pk)
