@@ -83,3 +83,10 @@ class ChessClubView(ViewSet):
         clubs = ChessClub.objects.filter(members = player)
         serialized = ChessClubSerializer(clubs, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
+    
+    @action(methods="put", detail=True)
+    def join_club(self, request, pk=None):
+        club = ChessClub.objects.get(pk=pk)
+        player = Player.objects.get(user = request.auth.user)
+        club.members.add(player)
+        return Response({'message': 'club joined'}, status=status.HTTP_204_NO_CONTENT)

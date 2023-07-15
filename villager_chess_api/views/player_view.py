@@ -99,7 +99,4 @@ class PlayerView(ViewSet):
         serialized = PlayerProfileSerializer(player, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
     
-    @action(methods="put", detail=True)
-    def join_club(self, request, pk=None):
-        club = ChessClub.objects.get(pk=pk)
-        
+    
