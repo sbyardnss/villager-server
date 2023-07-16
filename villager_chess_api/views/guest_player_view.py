@@ -12,6 +12,7 @@ class GuestPlayerSerializer(serializers.ModelSerializer):
 
 class CreateGuestPlayerSerializer(serializers.ModelSerializer):
     class Meta: 
+        model = GuestPlayer
         fields = ['id', 'full_name']
 class GuestView(ViewSet):
     """handles rest requests for guest users for tournament participation"""

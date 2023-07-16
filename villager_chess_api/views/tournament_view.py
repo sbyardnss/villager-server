@@ -2,8 +2,9 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.decorators import action
+from django.db.models import Count, Q
 
-from villager_chess_api.models import Tournament, Player, TimeSetting, Game, GuestPlayer
+from villager_chess_api.models import Tournament, Player, TimeSetting, Game, GuestPlayer, ChessClub
 
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -11,11 +12,17 @@ class PlayerSerializer(serializers.ModelSerializer):
         model = Player
         fields = ('id', 'full_name')
 
+
 class GuestPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = GuestPlayer
         fields = ('id', 'full_name', 'guest_id')
 
+
+class ClubOnTournamentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChessClub
+        fields = ('id', 'name')
 class GameTournamentSerializer(serializers.ModelSerializer):
     player_w = PlayerSerializer(many=False)
     player_b = PlayerSerializer(many=False)
@@ -30,10 +37,11 @@ class TournamentSerializer(serializers.ModelSerializer):
     creator = PlayerSerializer(many=False)
     # games = GameTournamentSerializer(many=True)
     guest_competitors = GuestPlayerSerializer(many=True)
+    club = ClubOnTournamentSerializer(many=False)
     class Meta:
         model = Tournament
         fields = ('id', 'title', 'creator', 'games', 'time_setting',
-                  'complete', 'competitors', 'guest_competitors', 'rounds', 'pairings', 'in_person')
+                  'complete', 'competitors', 'guest_competitors', 'rounds', 'pairings', 'in_person', 'club')
 
 
 class CreateTournamentSerializer(serializers.ModelSerializer):
@@ -66,7 +74,7 @@ class TournamentView(ViewSet):
         serialized = CreateTournamentSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
         serialized.save(creator=creator, time_setting=time_setting,
-                        competitors=competitor_list, guest_competitors = guest_competitor_list)
+                        competitors=competitor_list, guest_competitors=guest_competitor_list)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None):
@@ -78,10 +86,11 @@ class TournamentView(ViewSet):
 
     @action(methods=['get'], detail=False)
     def my_tournaments(self, request):
-        player = Player.objects.get(user = request.auth.user)
-        tournaments = Tournament.objects.filter(competitors = player)
+        player = Player.objects.get(user=request.auth.user)
+        tournaments = Tournament.objects.filter(competitors=player)
         serialized = TournamentSerializer(tournaments, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
+
     @action(methods=['put'], detail=True)
     def end_tournament(self, request, pk=None):
         tournament = Tournament.objects.get(pk=pk)
