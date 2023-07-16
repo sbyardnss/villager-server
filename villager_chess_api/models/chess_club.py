@@ -13,4 +13,15 @@ class ChessClub(models.Model):
     details = models.CharField(null=True, max_length=100)
     password = models.CharField(null=True, max_length=20)
     members = models.ManyToManyField('Player', related_name='my_clubs')
-    guest_members = models.ManyToManyField('GuestPlayer', related_name='selected_guests_tournaments')
+    guest_members = models.ManyToManyField(
+        'GuestPlayer', related_name='selected_guests_tournaments')
+
+    @property
+    def has_password(self):
+        """
+        boolean property to see if a password is required to join
+        """
+        if self.password is not None:
+            return True
+        else:
+            return False
