@@ -29,8 +29,8 @@ update villager_chess_api_tournament
 SET rounds = 2
 Where id = 38
 
-DELETE FROM villager_chess_api_guestplayer
-WHERE ID > 1
+DELETE FROM villager_chess_api_chessclub
+WHERE ID = 6
 
 DELETE FROM authtoken_token 
 WHERE USER_ID = 15
