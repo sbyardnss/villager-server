@@ -30,7 +30,7 @@ class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ('id', 'user', 'full_name', 'email',
-                  'username', 'friends', 'is_friend')
+                  'username', 'friends', 'is_friend', 'my_clubs')
 
 
 class CreatePlayerSerializer(serializers.ModelSerializer):
@@ -99,7 +99,4 @@ class PlayerView(ViewSet):
         serialized = PlayerProfileSerializer(player, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
     
-    @action(methods="put", detail=True)
-    def join_club(self, request, pk=None):
-        club = ChessClub.objects.get(pk=pk)
-        
+    

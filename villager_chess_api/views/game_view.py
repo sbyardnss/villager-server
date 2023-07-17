@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 from villager_chess_api.models import Player, GuestPlayer, Game, Tournament, TimeSetting
 from django.contrib.contenttypes.models import ContentType
 
-
 class PlayerOnGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
@@ -159,20 +158,8 @@ class GameView(ViewSet):
 
     def update(self, request, pk=None):
         """handles PUT requests for game view"""
-        # game = Game.objects.get(pk=pk)
-        # game.winner_id = request.data['winner']
-        # if game.winner_id is not None:
-        #     game.win_style = "checkmate"
-        # else:
-        #     game.win_style = "draw"
-        # # game.w_notes = request.data['w_notes']
-        # # game.b_notes = request.data['b_notes']
-        # if request.data['pgn'] is not None:
-        #     game.pgn = request.data['pgn']
-        # game.save()
-        # return Response(None, status=status.HTTP_204_NO_CONTENT)
         game = Game.objects.get(pk=pk)
-        # print(game.target_winner_ct)
+        print(request.data)
         if request.data['winner'] is not None:
             if request.data['winner_model_type'] == 'guestplayer':
                 numeric_guest_id = int(request.data['winner'].split('g')[1])
@@ -183,17 +170,17 @@ class GameView(ViewSet):
                 game.target_winner_id = target_winner_id
                 game.target_winner_ct = target_winner_ct
                 game.save()
-            elif request.data['winner'] is None and request.data['win_style'] == 'draw':
-                game.win_style = request.data['win_style']
-                game.target_winner_ct = None
-                game.target_winner_id = None
-                game.save()
             else:
                 target_winner_id = Player.objects.get(
                     pk=request.data['winner']).id
                 target_winner_ct = ContentType.objects.get_for_model(Player)
                 game.target_winner_ct = target_winner_ct
                 game.target_winner_id = target_winner_id
+                game.save()
+        else:
+                game.win_style = request.data['win_style']
+                game.target_winner_ct = None
+                game.target_winner_id = None
                 game.save()
         if request.data['pgn'] is not None:
             game.pgn = request.data['pgn']
@@ -214,7 +201,7 @@ class GameView(ViewSet):
     def my_games(self, request):
         player = Player.objects.get(user=request.auth.user)
         games = Game.objects.filter(
-            Q(target_player_w_ct_id = 9) & Q(target_player_w_id = player.id) | Q(target_player_b_ct_id = 9) & Q(target_player_b_id = player.id))
+            Q(target_player_w_ct_id = 11) & Q(target_player_w_id = player.id) | Q(target_player_b_ct_id = 11) & Q(target_player_b_id = player.id))
         serialized = GameSerializer(games, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
 

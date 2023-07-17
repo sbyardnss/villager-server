@@ -1,18 +1,19 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from villager_chess_api.models import GuestPlayer
+from villager_chess_api.models import GuestPlayer, ChessClub
 from rest_framework.decorators import action
 
 
 class GuestPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = GuestPlayer
-        fields = ('id', 'full_name', 'guest_id', 'club')
+        fields = ('id', 'full_name', 'guest_id')
 
 class CreateGuestPlayerSerializer(serializers.ModelSerializer):
     class Meta: 
-        fields = ['id', 'full_name', 'club']
+        model = GuestPlayer
+        fields = ['id', 'full_name']
 class GuestView(ViewSet):
     """handles rest requests for guest users for tournament participation"""
     def list(self, pk=None):
@@ -26,8 +27,13 @@ class GuestView(ViewSet):
         serialized = GuestPlayerSerializer(guest, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
     def create(self, request):
+        club = ChessClub.objects.get(pk=request.data['club'])
         serialized = CreateGuestPlayerSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
+        serialized.save()
+        print(serialized.data)
+        guest = GuestPlayer.objects.get(pk = serialized.data['id'])
+        club.guest_members.add(guest)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
     def destroy(self, request, pk=None):
         guest = GuestPlayer.objects.get(guest_id = request.data['guestId'])
