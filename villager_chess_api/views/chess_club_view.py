@@ -14,11 +14,14 @@ class PlayerOnClubSerializer(serializers.ModelSerializer):
         model = Player
         fields = ('id', 'full_name', 'username')
 
-
+class GuestOnClubSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GuestPlayer
+        fields = ('id', 'full_name', 'guest_id')
 class ChessClubSerializer(serializers.ModelSerializer):
     manager = PlayerOnClubSerializer(many=False)
     members = PlayerOnClubSerializer(many=True)
-
+    guest_members = GuestOnClubSerializer(many=True)
     class Meta:
         model = ChessClub
         fields = ('id', 'name', 'manager', 'date',
