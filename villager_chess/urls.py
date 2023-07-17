@@ -20,7 +20,7 @@ from django.urls import path
 from rest_framework import routers
 # removed AiView from line below for deployment
 from villager_chess_api.views import PlayerView, GameView, CommunityPostView, MessageView, TimeSettingView, TournamentView, login_user, register_user, GuestView, ChessClubView
-# from villager_chess_api.views.ai_handler import AiView
+from villager_chess_api.views.ai_handler import AiView
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'players', PlayerView, 'player')
@@ -29,7 +29,7 @@ router.register(r'timesettings', TimeSettingView, 'time_setting')
 router.register(r'tournaments', TournamentView, 'tournament')
 router.register(r'messages', MessageView, 'message')
 router.register(r'communityposts', CommunityPostView, 'community_post')
-# router.register(r'ai_response', AiView, 'ai')
+router.register(r'ai_response', AiView, 'ai')
 router.register(r'guests', GuestView, 'guest')
 router.register(r'clubs', ChessClubView, 'chess_club')
 
