@@ -5,5 +5,6 @@ from .time_setting_view import TimeSettingView
 from .tournament_view import TournamentView
 from .message_view import MessageView
 from .community_post import CommunityPostView
-# from .ai_handler import AiView
+from .ai_handler import AiView
 from .guest_player_view import GuestView
+from .chess_club_view import ChessClubView

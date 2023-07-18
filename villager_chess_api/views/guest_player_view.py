@@ -1,16 +1,19 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from villager_chess_api.models import GuestPlayer
+from villager_chess_api.models import GuestPlayer, ChessClub
+from rest_framework.decorators import action
+
 
 class GuestPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = GuestPlayer
-        fields = ('id', 'name', 'guest_id')
+        fields = ('id', 'full_name', 'guest_id')
 
 class CreateGuestPlayerSerializer(serializers.ModelSerializer):
     class Meta: 
-        fields = ['id', 'name']
+        model = GuestPlayer
+        fields = ['id', 'full_name']
 class GuestView(ViewSet):
     """handles rest requests for guest users for tournament participation"""
     def list(self, pk=None):
@@ -24,10 +27,21 @@ class GuestView(ViewSet):
         serialized = GuestPlayerSerializer(guest, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
     def create(self, request):
+        club = ChessClub.objects.get(pk=request.data['club'])
         serialized = CreateGuestPlayerSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
+        serialized.save()
+        print(serialized.data)
+        guest = GuestPlayer.objects.get(pk = serialized.data['id'])
+        club.guest_members.add(guest)
         return Response(serialized.data, status=status.HTTP_201_CREATED)
     def destroy(self, request, pk=None):
         guest = GuestPlayer.objects.get(guest_id = request.data['guestId'])
         guest.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    # @action(methods=['post'], detail=True)
+    # def test_get_guest_id(self, request, pk=None):
+    #     # print(request.data)
+    #     guest = GuestPlayer.objects.get(_guest_id = request.data['guestId'])
+    #     serialized = GuestPlayerSerializer(guest, many=False)
+    #     return Response(serialized.data, status=status.HTTP_200_OK)

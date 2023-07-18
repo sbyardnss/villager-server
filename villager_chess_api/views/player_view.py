@@ -6,7 +6,7 @@ from rest_framework import serializers, status
 from rest_framework.decorators import action
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
-from villager_chess_api.models import Player, Game, Tournament
+from villager_chess_api.models import Player, Game, Tournament, ChessClub
 
 
 class FriendSerializer(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ('id', 'user', 'full_name', 'email',
-                  'username', 'friends', 'is_friend')
+                  'username', 'friends', 'is_friend', 'my_clubs')
 
 
 class CreatePlayerSerializer(serializers.ModelSerializer):
@@ -98,4 +98,5 @@ class PlayerView(ViewSet):
         player = Player.objects.get(user=request.auth.user)
         serialized = PlayerProfileSerializer(player, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
-
+    
+    

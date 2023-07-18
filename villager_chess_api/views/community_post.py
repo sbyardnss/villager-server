@@ -12,11 +12,11 @@ class CommunityPostSerializer(serializers.ModelSerializer):
     poster = PosterSerializer(many=False)
     class Meta:
         model = CommunityPost
-        fields = ('id', 'poster', 'message', 'date_time')
+        fields = ('id', 'poster', 'message', 'date_time', 'club')
 class CreateCommunityPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommunityPost
-        fields = ['id', 'poster', 'message', 'date_time']
+        fields = ['id', 'poster', 'message', 'date_time', 'club']
 class CommunityPostView(ViewSet):
     """handles rest requests for community post objects"""
     def list(self, request):

@@ -12,6 +12,9 @@
                 1,
                 2
             ],
+            "guest_competitors": [
+                1
+            ],
             "rounds": 1,
             "in_person": false,
             "pairings": [
@@ -20,8 +23,39 @@
                     "match": 1,
                     "player1": 1,
                     "player2": 2
+                },
+                {
+                    "round": 1,
+                    "match": 2,
+                    "player1": "g1",
+                    "player2": null
+                },
+                {
+                    "round": 2,
+                    "match": 1,
+                    "player1": "g1",
+                    "player2": 1
+                },
+                {
+                    "round": 2,
+                    "match": 2,
+                    "player1": 2,
+                    "player2": null
+                },
+                {
+                    "round": 3,
+                    "match": 1,
+                    "player1": 2,
+                    "player2": "g1"
+                },
+                {
+                    "round": 3,
+                    "match": 2,
+                    "player1": 1,
+                    "player2": null
                 }
-            ]
+            ],
+            "club": 1
         }
     }
 ]
