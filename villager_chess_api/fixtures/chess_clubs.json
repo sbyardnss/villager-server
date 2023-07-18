@@ -3,7 +3,7 @@
         "model": "villager_chess_api.chessclub",
         "pk": 1,
         "fields": {
-            "name": "Villager Chess Club",
+            "name": "The one and only",
             "date": "2020-07-01",
             "manager": 1,
             "address": " 1719 21st Ave S", 
