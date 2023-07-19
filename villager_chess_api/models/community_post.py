@@ -6,4 +6,4 @@ class CommunityPost(models.Model):
     date_time = models.DateTimeField(auto_now=True)
     poster = models.ForeignKey(
         "Player", on_delete=models.SET_NULL, null=True, related_name="community_posts")
-    club = models.ForeignKey('ChessClub', on_delete=models.CASCADE, related_name='community_posts', default=1)
+    club = models.ForeignKey('ChessClub', on_delete=models.CASCADE, related_name='community_posts', null=True)
