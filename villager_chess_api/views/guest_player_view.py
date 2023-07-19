@@ -27,7 +27,6 @@ class GuestView(ViewSet):
         serialized = GuestPlayerSerializer(guest, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
     def create(self, request):
-        # club = ChessClub.objects.get(pk=request.data['club'])
         serialized = CreateGuestPlayerSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
         serialized.save()
@@ -42,13 +41,17 @@ class GuestView(ViewSet):
     #     guest = GuestPlayer.objects.get(_guest_id = request.data['guestId'])
     #     serialized = GuestPlayerSerializer(guest, many=False)
     #     return Response(serialized.data, status=status.HTTP_200_OK)
-    @action(methods=['post'], detail=False)
-    def create_guest(self, request, pk=None):
-        self.guest = GuestPlayer.objects.create()
-        # created_guest = GuestPlayer.objects.last()
-        club = ChessClub.objects.get(pk= request.data['club'])
-        club.guest_members.add(self.guest)
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+
+    # @action(methods=['post'], detail=False)
+    # def create_guest(self, request, pk=None):
+    #     self.guest = GuestPlayer.objects.create()
+    #     # created_guest = GuestPlayer.objects.last()
+    #     club = ChessClub.objects.get(pk= request.data['club'])
+    #     club.guest_members.add(self.guest)
+    #     return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
+
     # def create(self, request, pk=None):
     #     club = ChessClub.objects.get(pk=request.data['club'])
     #     serialized = CreateGuestPlayerSerializer(data=request.data)
