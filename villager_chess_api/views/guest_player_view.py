@@ -26,7 +26,7 @@ class GuestView(ViewSet):
         guest = GuestPlayer.objects.get(pk = numeric_id)
         serialized = GuestPlayerSerializer(guest, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
-    def create(self, request):
+    def create(self, request, pk=None):
         club = ChessClub.objects.get(pk=request.data['club'])
         serialized = CreateGuestPlayerSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
