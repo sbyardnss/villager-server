@@ -11,7 +11,7 @@ class GuestPlayerSerializer(serializers.ModelSerializer):
         fields = ('id', 'full_name', 'guest_id')
 
 class CreateGuestPlayerSerializer(serializers.ModelSerializer):
-    class Meta: 
+    class Meta:
         model = GuestPlayer
         fields = ['id', 'full_name']
 class GuestView(ViewSet):
@@ -43,13 +43,13 @@ class GuestView(ViewSet):
     #     return Response(serialized.data, status=status.HTTP_200_OK)
 
 
-    # @action(methods=['post'], detail=False)
-    # def create_guest(self, request, pk=None):
-    #     self.guest = GuestPlayer.objects.create()
-    #     # created_guest = GuestPlayer.objects.last()
-    #     club = ChessClub.objects.get(pk= request.data['club'])
-    #     club.guest_members.add(self.guest)
-    #     return Response(None, status=status.HTTP_204_NO_CONTENT)
+    @action(methods=['post'], detail=False)
+    def create_guest(self, request, pk=None):
+        self.guest = GuestPlayer.objects.create()
+        # created_guest = GuestPlayer.objects.last()
+        club = ChessClub.objects.get(pk= request.data['club'])
+        club.guest_members.add(self.guest)
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
     
 
     # def create(self, request, pk=None):
