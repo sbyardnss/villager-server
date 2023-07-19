@@ -51,6 +51,7 @@
             "tournament": 1,
             "tournament_round": 1,
             "time_setting": 1,
+            "pgn": "",
             "target_winner_id": 1,
             "target_winner_ct": 15,
             "win_style": "checkmate",
