@@ -24,7 +24,6 @@ class PlayerObjectRelatedField(serializers.RelatedField):
     """
     A custom field to use for the `tagged_object` generic relationship.
     """
-
     def to_representation(self, value):
         """
         Serialize tagged objects to a simple textual representation.
