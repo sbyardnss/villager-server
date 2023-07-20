@@ -143,7 +143,6 @@ class TournamentView(ViewSet):
             player_obj = Player.objects.get(pk=player.id)
             ct_id = ContentType.objects.get_for_model(Player)
             player_games = tournament_games.filter(Q(target_player_w_ct = ct_id, target_player_w_id = player.id) | Q(target_player_b_ct = ct_id, target_player_b_id = player.id))
-
             # 3 lines below work for getting winner of game
             # round = 1
             # round_one_player_game = player_games.filter(tournament_round = round)
@@ -158,11 +157,38 @@ class TournamentView(ViewSet):
                     if round_player_game.first().winner == player_obj:
                         scorecard[player.id].append(1)
                     # check if draw
-                    elif round_player_game.first().win_style:
+                    elif round_player_game.first().win_style == 'draw':
                         scorecard[player.id].append(.5)
                     # if not winner and not draw then player lost
                     else:
                         scorecard[player.id].append(0)
                 else:
                     scorecard[player.id].append('none')
+        for guest in tournament.guest_competitors.all():
+            scorecard[guest.guest_id] = []
+            guest_obj = GuestPlayer.objects.get(pk=guest.id)
+            ct_id = ContentType.objects.get_for_model(GuestPlayer)
+            player_games = tournament_games.filter(Q(target_player_w_ct = ct_id, target_player_w_id = guest.id) | Q(target_player_b_ct = ct_id, target_player_b_id = guest.id))
+            # 3 lines below work for getting winner of game
+            # round = 1
+            # round_one_player_game = player_games.filter(tournament_round = round)
+            # print(round_one_player_game[0].winner)
+
+            # iterating rounds
+            for round in range(tournament.rounds):
+                round_player_game = player_games.filter(tournament_round = round+1)
+                # check if game exists
+                if round_player_game:
+                    # check if player won
+                    if round_player_game.first().winner == guest_obj:
+                        scorecard[guest.guest_id].append(1)
+                    # check if draw
+                    elif round_player_game.first().win_style == 'draw':
+                        # print(round_player_game.first().win_style)
+                        scorecard[guest.guest_id].append(.5)
+                    # if not winner and not draw then player lost
+                    else:
+                        scorecard[guest.guest_id].append(0)
+                else:
+                    scorecard[guest.guest_id].append('none')
         return Response(scorecard, status=status.HTTP_200_OK)
