@@ -67,6 +67,7 @@ class GameTournamentSerializer(serializers.ModelSerializer):
 class TournamentSerializer(serializers.ModelSerializer):
     creator = PlayerSerializer(many=False)
     # games = GameTournamentSerializer(many=True)
+    competitors = PlayerSerializer(many=True)
     guest_competitors = GuestPlayerSerializer(many=True)
     club = ClubOnTournamentSerializer(many=False)
 
@@ -153,15 +154,19 @@ class TournamentView(ViewSet):
                 round_player_game = player_games.filter(tournament_round = round+1)
                 # check if game exists
                 if round_player_game:
-                    # check if player won
-                    if round_player_game.first().winner == player_obj:
-                        scorecard[player.id].append(1)
-                    # check if draw
-                    elif round_player_game.first().win_style == 'draw':
-                        scorecard[player.id].append(.5)
-                    # if not winner and not draw then player lost
+                    # check if bye game
+                    if round_player_game.first().bye == True:
+                        scorecard[player.id].append('bye')
                     else:
-                        scorecard[player.id].append(0)
+                    # check if player won
+                        if round_player_game.first().winner == player_obj:
+                            scorecard[player.id].append(1)
+                        # check if draw
+                        elif round_player_game.first().win_style == 'draw':
+                            scorecard[player.id].append(.5)
+                        # if not winner and not draw then player lost
+                        else:
+                            scorecard[player.id].append(0)
                 else:
                     scorecard[player.id].append('none')
         for guest in tournament.guest_competitors.all():
@@ -179,16 +184,20 @@ class TournamentView(ViewSet):
                 round_player_game = player_games.filter(tournament_round = round+1)
                 # check if game exists
                 if round_player_game:
+                    # check if bye game
+                    if round_player_game.first().bye == True:
+                        scorecard[guest.guest_id].append('bye')
                     # check if player won
-                    if round_player_game.first().winner == guest_obj:
-                        scorecard[guest.guest_id].append(1)
-                    # check if draw
-                    elif round_player_game.first().win_style == 'draw':
-                        # print(round_player_game.first().win_style)
-                        scorecard[guest.guest_id].append(.5)
-                    # if not winner and not draw then player lost
                     else:
-                        scorecard[guest.guest_id].append(0)
+                        if round_player_game.first().winner == guest_obj:
+                            scorecard[guest.guest_id].append(1)
+                        # check if draw
+                        elif round_player_game.first().win_style == 'draw':
+                            # print(round_player_game.first().win_style)
+                            scorecard[guest.guest_id].append(.5)
+                        # if not winner and not draw then player lost
+                        else:
+                            scorecard[guest.guest_id].append(0)
                 else:
                     scorecard[guest.guest_id].append('none')
         return Response(scorecard, status=status.HTTP_200_OK)

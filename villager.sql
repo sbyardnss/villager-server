@@ -12,7 +12,7 @@ DELETE FROM villager_chess_api_tournament_guest_competitors
 WHERE tournament_id > 1
 
 DELETE FROM villager_chess_api_game
-WHERE id > 41
+WHERE id > 100
 
 UPDATE villager_chess_api_tournament
 SET complete = 0
@@ -29,8 +29,9 @@ update villager_chess_api_tournament
 SET complete = false
 Where id = 1
 
-DELETE FROM villager_chess_api_chessclub_guest_members
-WHERE ID = 3
+DELETE FROM villager_chess_api_guestplayer
+WHERE id = 9
+
 
 DELETE FROM authtoken_token 
 WHERE USER_ID = 15
