@@ -30,7 +30,10 @@ SET complete = false
 Where id = 1
 
 DELETE FROM villager_chess_api_guestplayer
-WHERE id = 9
+WHERE id >11
+
+DELETE FROM villager_chess_api_chessclub_guest_members
+WHERE guestplayer_id > 8
 
 
 DELETE FROM authtoken_token 
