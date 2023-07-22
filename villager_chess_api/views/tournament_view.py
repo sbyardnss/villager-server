@@ -80,7 +80,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 class CreateTournamentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournament
-        fields = ['id', 'title', 'time_setting', 'pairings', 'in_person']
+        fields = ['id', 'title', 'time_setting', 'pairings', 'in_person', 'club']
 
 
 class TournamentView(ViewSet):
