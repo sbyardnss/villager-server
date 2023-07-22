@@ -114,7 +114,8 @@ class TournamentView(ViewSet):
         """handles PUT requests for tournament view"""
         tournament = Tournament.objects.get(pk=pk)
         tournament.rounds = request.data['rounds']
-        # tournament.pairings = request.data['pairings']
+        tournament.pairings = request.data['pairings']
+        
         tournament.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
