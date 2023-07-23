@@ -15,8 +15,9 @@ DELETE FROM villager_chess_api_game
 WHERE id > 1
 
 UPDATE villager_chess_api_tournament
-SET complete = 0
-WHERE ID = 1
+-- SET pairings = '[{"round": 1, "match": 1, "player1": 3, "player2": "g5"}, {"round": 1, "match": 2, "player1": 4, "player2": 6}, {"round": 1, "match": 3, "player1": 1, "player2": "g8"}, {"round": 1, "match": 4, "player1": "g1", "player2": null}]'
+SET rounds = 1
+WHERE ID = 16
 
 
 DELETE FROM villager_chess_api_player
