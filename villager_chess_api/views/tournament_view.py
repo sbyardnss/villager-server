@@ -115,7 +115,8 @@ class TournamentView(ViewSet):
         tournament = Tournament.objects.get(pk=pk)
         tournament.rounds = request.data['rounds']
         tournament.pairings = request.data['pairings']
-        
+        tournament.competitors.set(request.data['competitors'])
+        tournament.guest_competitors.set(request.data['guest_competitors'])
         tournament.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
