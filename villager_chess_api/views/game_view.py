@@ -24,7 +24,6 @@ class PlayerObjectRelatedField(serializers.RelatedField):
     """
     A custom field to use for the `tagged_object` generic relationship.
     """
-
     def to_representation(self, value):
         """
         Serialize tagged objects to a simple textual representation.
@@ -161,6 +160,8 @@ class GameView(ViewSet):
         game = Game.objects.get(pk=pk)
         print(request.data)
         if request.data['winner'] is not None:
+            if request.data['win_style'] == 'checkmate':
+                game.win_style = 'checkmate'
             if request.data['winner_model_type'] == 'guestplayer':
                 numeric_guest_id = int(request.data['winner'].split('g')[1])
                 target_winner_id = GuestPlayer.objects.get(
