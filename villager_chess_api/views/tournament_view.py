@@ -120,6 +120,16 @@ class TournamentView(ViewSet):
         tournament.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    def destroy(self, request, pk=None):
+        tournament = Tournament.objects.get(pk=pk)
+        tourney_games = Game.objects.filter(tournament = tournament.id)
+        for game in tourney_games:
+            game.delete()
+        tournament.competitors.set([])
+        tournament.guest_competitors.set([])
+        tournament.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
     @action(methods=['get'], detail=False)
     def my_tournaments(self, request):
         player = Player.objects.get(user=request.auth.user)
