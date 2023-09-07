@@ -20,6 +20,7 @@ Villager Chess is an application for chess clubs to coordinate meetups, play cor
 
 ### Setup
 * Enter virtual environment
+
 ```sh
 pipenv shell
 ```
@@ -29,12 +30,16 @@ pipenv shell
 pipenv install django autopep8 pylint djangorestframework django-cors-headers pylint-django
 ```
 
+
 * Select sqlite database (may vary from mac to windows)
-* Mac Cmd+Shift+P to open preference search
-* Select Sqlite: Open Database
-* Choose db.sqlite3
+* Mac: Cmd+Shift+P to open preference search
+* Select "Sqlite: Open Database"
+* Choose "db.sqlite3"
+
+
 
 * Migrate Tables
+
 ```sh
 python3 manage.py migrate
 ```
