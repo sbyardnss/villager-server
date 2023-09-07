@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import django_on_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'villager_chess_api',
-    'openai'
+    # 'openai'
 ]
 
 # THIS IS NEW
@@ -57,10 +59,20 @@ REST_FRAMEWORK = {
 }
 
 # THIS IS NEW
-CORS_ORIGIN_WHITELIST = (
+CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
-    'http://127.0.0.1:3000'
-)
+    'http://127.0.0.1:3000',
+    # 'https://6470c208d361a40009ceab9e--visionary-treacle-0efacd.netlify.app',
+    'https://loquacious-bienenstitch-cc2290.netlify.app',
+    # 'https://visionary-treacle-0efacd.netlify.app'
+    'https://villagerchess.netlify.app'
+]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'https://loquacious-bienenstitch-cc2290.netlify.app',
+    'https://villagerchess.netlify.app'
+]
 
 # UPDATE THIS
 MIDDLEWARE = [
@@ -73,6 +85,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+# # MY OWN ADDED SETTING FOR AI
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://localhost:3000',
+#     'http://127.0.0.1:3000'
+# ]
+
 
 ROOT_URLCONF = 'villager_chess.urls'
 
@@ -140,9 +158,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# old static url commented out before deploy
+# STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# below added for deploy
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = "/static/"
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+django_on_heroku.settings(locals())

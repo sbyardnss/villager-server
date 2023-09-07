@@ -1,26 +1,22 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
-# from rest_framework.decorators import action
-# from datetime import datetime
-# from django.db.models import Count, Q
-# from django.contrib.auth.models import User
 from villager_chess_api.models import Player, CommunityPost
 
 class PosterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ('id', 'full_name')
+        fields = ('id', 'full_name', 'username')
 
 class CommunityPostSerializer(serializers.ModelSerializer):
     poster = PosterSerializer(many=False)
     class Meta:
         model = CommunityPost
-        fields = ('id', 'poster', 'message', 'date_time')
+        fields = ('id', 'poster', 'message', 'date_time', 'club')
 class CreateCommunityPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommunityPost
-        fields = ['id', 'poster', 'message', 'date_time']
+        fields = ['id', 'poster', 'message', 'date_time', 'club']
 class CommunityPostView(ViewSet):
     """handles rest requests for community post objects"""
     def list(self, request):

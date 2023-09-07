@@ -1,25 +1,27 @@
 from rest_framework.viewsets import ViewSet
+from django.contrib.auth import authenticate
+
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from rest_framework.decorators import action
-from datetime import datetime
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
-from villager_chess_api.models import Player, Game, Tournament
+from villager_chess_api.models import Player, Game, Tournament, ChessClub
 
 
 class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ('id', 'full_name')
+        fields = ('id', 'full_name', 'username')
 
 
 class PlayerProfileSerializer(serializers.ModelSerializer):
     friends = FriendSerializer(many=True)
+
     class Meta:
         model = Player
         fields = ('id', 'user', 'full_name', 'first_name',
-                  'last_name', 'email', 'username', 'password', 'friends')
+                  'last_name', 'email', 'username', 'friends')
 
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -28,7 +30,13 @@ class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ('id', 'user', 'full_name', 'email',
-                  'username', 'friends', 'is_friend')
+                  'username', 'friends', 'is_friend', 'my_clubs')
+
+
+class CreatePlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Player
+        fields = ('id', 'user')
 
 
 class PlayerView(ViewSet):
@@ -50,6 +58,12 @@ class PlayerView(ViewSet):
             players = players.filter(email=request.query_params['email'])
         serialized = PlayerSerializer(players, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
+
+    def create(self, request):
+        """handle post requests to player view"""
+        serialized = CreatePlayerSerializer(data=request.data)
+        serialized.is_valid(raise_exception=True)
+        return Response(serialized.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None):
         """handles put requests for player view"""
@@ -84,3 +98,5 @@ class PlayerView(ViewSet):
         player = Player.objects.get(user=request.auth.user)
         serialized = PlayerProfileSerializer(player, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
+    
+    

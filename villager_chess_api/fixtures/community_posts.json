@@ -5,7 +5,8 @@
         "fields": {
             "poster": 1,
             "message": "welcome everyone",
-            "date_time": "2023-05-12T21:19:25.057Z"
+            "date_time": "2023-05-12T21:19:25.057Z",
+            "club": 1
         }
     }
 ]

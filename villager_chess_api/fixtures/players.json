@@ -12,19 +12,5 @@
         "fields": {
             "user": 2
         }
-    },
-    {
-        "model": "villager_chess_api.player",
-        "pk": 3,
-        "fields": {
-            "user": 3
-        }
-    },
-    {
-        "model": "villager_chess_api.player",
-        "pk": 4,
-        "fields": {
-            "user": 4
-        }
     }
 ]
