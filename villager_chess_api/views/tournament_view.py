@@ -133,20 +133,27 @@ class TournamentView(ViewSet):
     @action(methods=['get'], detail=False)
     def my_tournaments(self, request):
         player = Player.objects.get(user=request.auth.user)
-        # print('player', player)
         clubs = ChessClub.objects.filter(members=player)
-        # print('clubs', clubs)
         tournaments = Tournament.objects.filter(club__in=clubs)
-        # print('tournaments', tournaments)
-        # tournaments = []
-        # for club in clubs:
-        #     club_tournaments = Tournament.objects.filter(club = club)
-        #     for club_t in club_tournaments:
-        #         tournaments.append(club_t)
-
-        # tournaments = Tournament.objects.filter(competitors=player)
         serialized = TournamentSerializer(tournaments, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['get'], detail=False)
+    def my_open_tournaments(self, request):
+        player = Player.objects.get(user=request.auth.user)
+        clubs = ChessClub.objects.filter(members=player)
+        tournaments = Tournament.objects.filter(club__in=clubs, complete=False)
+        serialized = TournamentSerializer(tournaments, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['get'], detail=False)
+    def my_past_tournaments(self, request):
+        player = Player.objects.get(user=request.auth.user)
+        clubs = ChessClub.objects.filter(members=player)
+        tournaments = Tournament.objects.filter(club__in=clubs, complete=True)
+        serialized = TournamentSerializer(tournaments, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
 
     @action(methods=['put'], detail=True)
     def end_tournament(self, request, pk=None):
