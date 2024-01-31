@@ -81,8 +81,6 @@ class PlayerView(ViewSet):
             # Add all guests from the club to the list
             guests.extend(club.guest_members.all())
         serialized_players = PlayerSerializer(players, many=True)
-        serialized_guests = GuestOnClubSerializer(guests, many=True)
+        serialized_guests = GuestPlayerSerializer(guests, many=True)
         serialized_all = serialized_players.data + serialized_guests.data
         return Response(serialized_all, status=status.HTTP_200_OK)
-
-    

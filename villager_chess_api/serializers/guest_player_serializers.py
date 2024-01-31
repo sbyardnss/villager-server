@@ -5,3 +5,8 @@ class GuestPlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = GuestPlayer
         fields = ('id', 'full_name', 'guest_id')
+
+class CreateGuestPlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GuestPlayer
+        fields = ['id', 'full_name']

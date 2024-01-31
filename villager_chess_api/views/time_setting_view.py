@@ -6,16 +6,7 @@ from datetime import datetime
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
 from villager_chess_api.models import TimeSetting
-
-class TimeSettingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TimeSetting
-        fields = ('id', 'time_amount', 'increment')
-
-class CreateTimeSettingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TimeSetting
-        fields = ['id', 'time_amount', 'increment']
+from villager_chess_api.serializers import TimeSettingSerializer, CreateTimeSettingSerializer
 
 class TimeSettingView(ViewSet):
     """handles rest requests for time_setting objects"""

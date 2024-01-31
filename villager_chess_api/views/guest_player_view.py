@@ -2,18 +2,9 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from villager_chess_api.models import GuestPlayer, ChessClub
+from villager_chess_api.serializers import GuestPlayerSerializer, CreateGuestPlayerSerializer
 from rest_framework.decorators import action
 
-
-class GuestPlayerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GuestPlayer
-        fields = ('id', 'full_name', 'guest_id')
-
-class CreateGuestPlayerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GuestPlayer
-        fields = ['id', 'full_name']
 class GuestView(ViewSet):
     """handles rest requests for guest users for tournament participation"""
     def list(self, pk=None):

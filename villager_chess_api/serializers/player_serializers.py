@@ -25,3 +25,8 @@ class PlayerProfileSerializer(serializers.ModelSerializer):
         model = Player
         fields = ('id', 'user', 'full_name', 'first_name',
                   'last_name', 'email', 'username', 'friends')
+
+class PlayerOnTournamentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Player
+        fields = ('id', 'full_name')

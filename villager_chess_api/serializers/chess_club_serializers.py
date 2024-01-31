@@ -20,3 +20,7 @@ class CreateChessClubSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'address',
                   'city', 'state', 'zipcode', 'details', 'password']
 
+class ClubRelatedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChessClub
+        fields = ('id', 'name')

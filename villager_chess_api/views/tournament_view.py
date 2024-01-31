@@ -6,82 +6,7 @@ from django.db.models import Count, Q
 from django.contrib.contenttypes.models import ContentType
 
 from villager_chess_api.models import Tournament, Player, TimeSetting, Game, GuestPlayer, ChessClub
-
-
-class PlayerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Player
-        fields = ('id', 'full_name')
-
-
-class GuestPlayerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GuestPlayer
-        fields = ('id', 'full_name', 'guest_id')
-
-
-class ClubOnTournamentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChessClub
-        fields = ('id', 'name')
-# class GameTournamentSerializer(serializers.ModelSerializer):
-#     player_w = PlayerSerializer(many=False)
-#     player_b = PlayerSerializer(many=False)
-#     class Meta:
-#         model = Game
-#         # fields = ('id', 'player_w', 'player_b', 'winner', 'pgn', 'win_style', 'tournament_round')
-#         fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
-#                   'is_tournament', 'time_setting', 'winner', 'pgn', 'bye', 'accepted')
-
-
-# added during scorecard function creation. I dont believe we need this permanently
-class PlayerObjectRelatedField(serializers.RelatedField):
-    """
-    A custom field to use for the `tagged_object` generic relationship.
-    """
-
-    def to_representation(self, value):
-        """
-        Serialize tagged objects to a simple textual representation.
-        """
-        if isinstance(value, GuestPlayer):
-            serializer = GuestPlayerSerializer(value, many=False)
-        elif isinstance(value, Player):
-            serializer = PlayerSerializer(value, many=False)
-        else:
-            raise Exception('Unexpected type of tagged object')
-        return serializer.data
-
-
-class GameTournamentSerializer(serializers.ModelSerializer):
-    player_w = PlayerObjectRelatedField(many=False, read_only=True)
-    player_b = PlayerObjectRelatedField(many=False, read_only=True)
-    winner = PlayerObjectRelatedField(many=False, read_only=True)
-
-    class Meta:
-        model = Game
-        fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
-                  'time_setting', 'winner', 'pgn', 'bye', 'accepted', 'win_style', 'target_winner_ct', 'target_player_b_ct', 'target_player_w_ct')  # removed target_winner_ct, target_player_b_ct, target_player_w_ct
-
-
-class TournamentSerializer(serializers.ModelSerializer):
-    creator = PlayerSerializer(many=False)
-    # games = GameTournamentSerializer(many=True)
-    competitors = PlayerSerializer(many=True)
-    guest_competitors = GuestPlayerSerializer(many=True)
-    club = ClubOnTournamentSerializer(many=False)
-
-    class Meta:
-        model = Tournament
-        fields = ('id', 'title', 'creator', 'games', 'time_setting',
-                  'complete', 'competitors', 'guest_competitors', 'rounds', 'pairings', 'in_person', 'club')
-
-
-class CreateTournamentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tournament
-        fields = ['id', 'title', 'time_setting', 'pairings', 'in_person', 'club']
-
+from villager_chess_api.serializers import TournamentSerializer, CreateTournamentSerializer
 
 class TournamentView(ViewSet):
     """handles rest requests for tournament objects"""
@@ -120,12 +45,40 @@ class TournamentView(ViewSet):
         tournament.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    def destroy(self, request, pk=None):
+        tournament = Tournament.objects.get(pk=pk)
+        tourney_games = Game.objects.filter(tournament = tournament.id)
+        for game in tourney_games:
+            game.delete()
+        tournament.competitors.set([])
+        tournament.guest_competitors.set([])
+        tournament.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+    
     @action(methods=['get'], detail=False)
     def my_tournaments(self, request):
         player = Player.objects.get(user=request.auth.user)
-        tournaments = Tournament.objects.filter(competitors=player)
+        clubs = ChessClub.objects.filter(members=player)
+        tournaments = Tournament.objects.filter(club__in=clubs)
         serialized = TournamentSerializer(tournaments, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['get'], detail=False)
+    def my_open_tournaments(self, request):
+        player = Player.objects.get(user=request.auth.user)
+        clubs = ChessClub.objects.filter(members=player)
+        tournaments = Tournament.objects.filter(club__in=clubs, complete=False)
+        serialized = TournamentSerializer(tournaments, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['get'], detail=False)
+    def my_past_tournaments(self, request):
+        player = Player.objects.get(user=request.auth.user)
+        clubs = ChessClub.objects.filter(members=player)
+        tournaments = Tournament.objects.filter(club__in=clubs, complete=True)
+        serialized = TournamentSerializer(tournaments, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
 
     @action(methods=['put'], detail=True)
     def end_tournament(self, request, pk=None):
