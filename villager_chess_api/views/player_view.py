@@ -1,12 +1,9 @@
 from rest_framework.viewsets import ViewSet
-from django.contrib.auth import authenticate
-
 from rest_framework.response import Response
-from rest_framework import serializers, status
+from rest_framework import status
 from rest_framework.decorators import action
 from django.db.models import Count, Q
-from django.contrib.auth.models import User
-from villager_chess_api.models import Player, Game, Tournament, ChessClub, GuestPlayer
+from villager_chess_api.models import Player, ChessClub
 from villager_chess_api.serializers import PlayerSerializer, PlayerProfileSerializer, CreatePlayerSerializer, GuestPlayerSerializer
 
 class PlayerView(ViewSet):

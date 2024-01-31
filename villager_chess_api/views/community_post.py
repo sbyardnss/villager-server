@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework import serializers, status
-from villager_chess_api.models import Player, CommunityPost
+from rest_framework import status
+from villager_chess_api.models import CommunityPost
 from villager_chess_api.serializers import CreateCommunityPostSerializer, CommunityPostSerializer
 
 class CommunityPostView(ViewSet):

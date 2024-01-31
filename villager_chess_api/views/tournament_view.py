@@ -1,10 +1,9 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework import serializers, status
+from rest_framework import status
 from rest_framework.decorators import action
-from django.db.models import Count, Q
+from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
-
 from villager_chess_api.models import Tournament, Player, TimeSetting, Game, GuestPlayer, ChessClub
 from villager_chess_api.serializers import TournamentSerializer, CreateTournamentSerializer
 
