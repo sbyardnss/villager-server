@@ -7,59 +7,7 @@ from rest_framework.decorators import action
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
 from villager_chess_api.models import Player, Game, Tournament, ChessClub, GuestPlayer
-
-
-class FriendSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Player
-        fields = ('id', 'full_name', 'username')
-
-
-class PlayerProfileSerializer(serializers.ModelSerializer):
-    friends = FriendSerializer(many=True)
-
-    class Meta:
-        model = Player
-        fields = ('id', 'user', 'full_name', 'first_name',
-                  'last_name', 'email', 'username', 'friends')
-
-
-class PlayerSerializer(serializers.ModelSerializer):
-    friends = FriendSerializer(many=True)
-
-    class Meta:
-        model = Player
-        fields = ('id', 'user', 'full_name', 'email',
-                  'username', 'friends', 'is_friend', 'my_clubs')
-
-class GuestOnClubSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GuestPlayer
-        fields = ('id', 'full_name', 'guest_id')
-
-class CreatePlayerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Player
-        fields = ('id', 'user')
-
-# class PlayerOnClubSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Player
-#         fields = ('id', 'full_name', 'username')
-
-class GuestOnClubSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GuestPlayer
-        fields = ('id', 'full_name', 'guest_id')
-class ChessClubSerializer(serializers.ModelSerializer):
-    # manager = PlayerOnClubSerializer(many=False)
-    # members = PlayerOnClubSerializer(many=True)
-    # guest_members = GuestOnClubSerializer(many=True)
-    class Meta:
-        model = ChessClub
-        fields = ('id', 'name', 'manager', 'date',
-                  'address', 'city', 'state', 'zipcode', 'details', 'members', 'guest_members', 'has_password')
-
+from villager_chess_api.serializers import PlayerSerializer, PlayerProfileSerializer, CreatePlayerSerializer, GuestOnClubSerializer
 
 class PlayerView(ViewSet):
     """handles rest requests for player objects"""

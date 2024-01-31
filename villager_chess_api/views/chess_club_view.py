@@ -7,33 +7,7 @@ from django.db.models import Count, Q
 from django.contrib.auth.models import User
 from villager_chess_api.models import Player, GuestPlayer, Game, Tournament, TimeSetting, ChessClub
 from django.contrib.contenttypes.models import ContentType
-
-
-class PlayerOnClubSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Player
-        fields = ('id', 'full_name', 'username')
-
-class GuestOnClubSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GuestPlayer
-        fields = ('id', 'full_name', 'guest_id')
-class ChessClubSerializer(serializers.ModelSerializer):
-    manager = PlayerOnClubSerializer(many=False)
-    members = PlayerOnClubSerializer(many=True)
-    guest_members = GuestOnClubSerializer(many=True)
-    class Meta:
-        model = ChessClub
-        fields = ('id', 'name', 'manager', 'date',
-                  'address', 'city', 'state', 'zipcode', 'details', 'members', 'guest_members', 'has_password')
-
-
-class CreateChessClubSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChessClub
-        fields = ['id', 'name', 'address',
-                  'city', 'state', 'zipcode', 'details', 'password']
-
+from villager_chess_api.serializers import ChessClubSerializer, CreateChessClubSerializer
 
 class ChessClubView(ViewSet):
     """handles rest requests for chess club objects"""
@@ -90,7 +64,6 @@ class ChessClubView(ViewSet):
 
     @action(methods=['post'], detail=True)
     def join_club(self, request, pk=None):
-        print(request.data)
         club = ChessClub.objects.get(pk=pk)
         player = Player.objects.get(user=request.auth.user)
         if club.password is not None:
