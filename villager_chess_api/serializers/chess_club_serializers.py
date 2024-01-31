@@ -1,13 +1,13 @@
 from rest_framework import serializers
 from villager_chess_api.models import ChessClub
-from .player_serializers import PlayerOnClubSerializer
-from .guest_player_serializers import GuestOnClubSerializer
+from .player_serializers import PlayerRelatedSerializer
+from .guest_player_serializers import GuestPlayerSerializer
 
 
 class ChessClubSerializer(serializers.ModelSerializer):
-    manager = PlayerOnClubSerializer(many=False)
-    members = PlayerOnClubSerializer(many=True)
-    guest_members = GuestOnClubSerializer(many=True)
+    manager = PlayerRelatedSerializer(many=False)
+    members = PlayerRelatedSerializer(many=True)
+    guest_members = GuestPlayerSerializer(many=True)
     class Meta:
         model = ChessClub
         fields = ('id', 'name', 'manager', 'date',

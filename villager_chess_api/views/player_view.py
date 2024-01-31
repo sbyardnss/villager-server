@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
 from villager_chess_api.models import Player, Game, Tournament, ChessClub, GuestPlayer
-from villager_chess_api.serializers import PlayerSerializer, PlayerProfileSerializer, CreatePlayerSerializer, GuestOnClubSerializer
+from villager_chess_api.serializers import PlayerSerializer, PlayerProfileSerializer, CreatePlayerSerializer, GuestPlayerSerializer
 
 class PlayerView(ViewSet):
     """handles rest requests for player objects"""
