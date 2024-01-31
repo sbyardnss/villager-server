@@ -6,7 +6,7 @@ from rest_framework import serializers, status
 from rest_framework.decorators import action
 from django.db.models import Count, Q
 from django.contrib.auth.models import User
-from villager_chess_api.models import Player, Game, Tournament, ChessClub
+from villager_chess_api.models import Player, Game, Tournament, ChessClub, GuestPlayer
 
 
 class FriendSerializer(serializers.ModelSerializer):
@@ -32,11 +32,33 @@ class PlayerSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'full_name', 'email',
                   'username', 'friends', 'is_friend', 'my_clubs')
 
+class GuestOnClubSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GuestPlayer
+        fields = ('id', 'full_name', 'guest_id')
 
 class CreatePlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ('id', 'user')
+
+# class PlayerOnClubSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Player
+#         fields = ('id', 'full_name', 'username')
+
+class GuestOnClubSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GuestPlayer
+        fields = ('id', 'full_name', 'guest_id')
+class ChessClubSerializer(serializers.ModelSerializer):
+    # manager = PlayerOnClubSerializer(many=False)
+    # members = PlayerOnClubSerializer(many=True)
+    # guest_members = GuestOnClubSerializer(many=True)
+    class Meta:
+        model = ChessClub
+        fields = ('id', 'name', 'manager', 'date',
+                  'address', 'city', 'state', 'zipcode', 'details', 'members', 'guest_members', 'has_password')
 
 
 class PlayerView(ViewSet):
@@ -98,5 +120,21 @@ class PlayerView(ViewSet):
         player = Player.objects.get(user=request.auth.user)
         serialized = PlayerProfileSerializer(player, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
-    
+
+    @action(methods=['get'], detail=False)
+    def club_mates(self, request):
+        player = Player.objects.get(user=request.auth.user)
+        clubs = ChessClub.objects.filter(members=player)
+        players = []
+        guests = []
+        for club in clubs:
+            # Add all players from the club to the list
+            players.extend(club.members.all())
+            # Add all guests from the club to the list
+            guests.extend(club.guest_members.all())
+        serialized_players = PlayerSerializer(players, many=True)
+        serialized_guests = GuestOnClubSerializer(guests, many=True)
+        serialized_all = serialized_players.data + serialized_guests.data
+        return Response(serialized_all, status=status.HTTP_200_OK)
+
     
