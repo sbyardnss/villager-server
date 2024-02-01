@@ -1,0 +1,1 @@
+from .test_community_posts import CommunityPostViewTest
