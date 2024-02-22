@@ -33,10 +33,9 @@ class GuestView(ViewSet):
     #     serialized = GuestPlayerSerializer(guest, many=False)
     #     return Response(serialized.data, status=status.HTTP_200_OK)
 
-
     @action(methods=['post'], detail=False)
     def create_guest(self, request, pk=None):
-        print(request.data)
+        # print(request.data)
         serialized = CreateGuestPlayerSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
         serialized.save()

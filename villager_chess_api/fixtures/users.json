@@ -70,5 +70,15 @@
             "groups": [],
             "user_permissions": []
         }
+    },
+    {
+        "model": "auth.user",
+        "pk": 5,
+        "fields": {
+            "username": "guest_test",
+            "password": "guestUser1",
+            "groups": [],
+            "user_permissions": []
+        }
     }
 ]

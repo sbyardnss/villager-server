@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from villager_chess_api.models import CommunityPost, Player, ChessClub
+from django.contrib.auth.models import User
 
 class CommunityPostViewTest(APITestCase):
     fixtures = ['users', 'tokens', 'community_posts', 'chess_clubs', 'players', 'guest_players']
@@ -15,6 +16,8 @@ class CommunityPostViewTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {token.key}")
     def test_list(self):
         # initial test for 1
+        users = User.objects.last()
+        print(users)
         response = self.client.get('http://localhost:8000/communityposts') # replace '/communitypost/' with the actual URL
         json_response = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

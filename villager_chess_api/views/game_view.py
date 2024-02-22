@@ -98,7 +98,7 @@ class GameView(ViewSet):
     def update(self, request, pk=None):
         """handles PUT requests for game view"""
         game = Game.objects.get(pk=pk)
-        print(request.data)
+        # print(request.data)
         if request.data['winner'] is not None:
             if request.data['win_style'] == 'checkmate':
                 game.win_style = 'checkmate'
@@ -128,7 +128,25 @@ class GameView(ViewSet):
             game.save()
         # game.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+    @action(methods=['get'], detail=False)
+    def get_active_user_games(self, request, pk=None):
+        user = Player.objects.get(user=request.auth.user)
+        active_user_games = Game.objects.filter(
+            Q(target_player_w_id=user.id, target_player_w_ct=11) |
+            Q(target_player_b_id=user.id, target_player_b_ct=11),
+            Q(target_winner_id=None, target_winner_ct=None),
+        )
+        active_user_games = active_user_games.exclude(win_style='draw')
+        serialized = GameSerializer(active_user_games, many=True)
 
+        return Response(serialized.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['get'], detail=False)
+    def get_open_challenges(self, request, pk=None):
+        open_games = Game.objects.filter(accepted = False)
+        serialized = GameSerializer(open_games)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+    
     @action(methods=['put'], detail=True)
     def accept_challenge(self, request, pk=None):
         game = Game.objects.get(pk=pk)
