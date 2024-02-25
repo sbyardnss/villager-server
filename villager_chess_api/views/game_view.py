@@ -144,7 +144,7 @@ class GameView(ViewSet):
     @action(methods=['get'], detail=False)
     def get_open_challenges(self, request, pk=None):
         open_games = Game.objects.filter(accepted = False)
-        serialized = GameSerializer(open_games)
+        serialized = GameSerializer(open_games, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
     
     @action(methods=['put'], detail=True)

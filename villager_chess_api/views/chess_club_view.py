@@ -58,6 +58,13 @@ class ChessClubView(ViewSet):
         serialized = ChessClubSerializer(clubs, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
+    @action(methods=["get"], detail=False)
+    def clubs_user_has_not_joined(self, request):
+        player = Player.objects.get(user=request.auth.user)
+        clubs = ChessClub.objects.exclude(members=player)
+        serialized = ChessClubSerializer(clubs, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
+
     @action(methods=['post'], detail=True)
     def join_club(self, request, pk=None):
         club = ChessClub.objects.get(pk=pk)
@@ -79,3 +86,13 @@ class ChessClubView(ViewSet):
         player = Player.objects.get(user=request.auth.user)
         club.members.remove(player)
         return Response({'message': 'club left'}, status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['delete'], detail=True)
+    def end_club(self, request, pk=None):
+        club = ChessClub.objects.get(pk=pk)
+        player = Player.objects.get(user=request.auth.user)
+        if (club.manager == player):
+            club.delete()
+            return Response(None, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({'message': 'not the creator'}, status=status.HTTP_401_UNAUTHORIZED)

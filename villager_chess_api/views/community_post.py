@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from villager_chess_api.models import CommunityPost
 from villager_chess_api.serializers import CreateCommunityPostSerializer, CommunityPostSerializer
+from rest_framework.decorators import action
 
 class CommunityPostView(ViewSet):
     """handles rest requests for community post objects"""
@@ -34,3 +35,8 @@ class CommunityPostView(ViewSet):
         post.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
+    @action(methods=['post'], detail=False)
+    def get_my_clubs_posts(self, request, pk=None):
+        community_posts=CommunityPost.objects.filter(club__in=request.data)
+        serialized = CommunityPostSerializer(community_posts, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
