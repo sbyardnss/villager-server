@@ -30,13 +30,16 @@ class ChessClubView(ViewSet):
     def update(self, request, pk=None):
         club = ChessClub.objects.get(pk=pk)
         try:
-            if request.data['oldPassword'] == club.password:
-                club.name = request.data['name']
-                club.address = request.data['address']
-                club.state = request.data['state']
-                club.zipcode = request.data['zipcode']
-                club.details = request.data['details']
-                club.password = request.data['newPassword']
+            if request.data['old_password'] == club.password or club.password == None:
+                # club.name = request.data['clubObj']['name']
+                # club.address = request.data['clubObj']['address']
+                # club.state = request.data['clubObj']['state']
+                # club.zipcode = request.data['clubObj']['zipcode']
+                # club.details = request.data['clubObj']['details']
+                # club.password = request.data['clubObj']['newPassword']
+                club.__dict__.update(request.data['clubObj'])
+                if request.data['clubObj']['newPassword']:
+                    club.password = request.data['clubObj']['newPassword']
                 club.save()
                 return Response(None, status=status.HTTP_204_NO_CONTENT)
         except ValueError as ex:
