@@ -99,3 +99,18 @@ class ChessClubView(ViewSet):
             return Response(None, status=status.HTTP_204_NO_CONTENT)
         else:
             return Response({'message': 'not the creator'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    @action(methods=['put'], detail=True)
+    def remove_club_password(self, request, pk=None):
+        club=ChessClub.objects.get(pk=pk)
+        try:
+            if club.password ==request.data['password']:
+                club.password = None
+                club.save()
+                return Response({'message': 'password removed'}, status=status.HTTP_200_OK)
+        except ValueError as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        except KeyError as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        except AssertionError as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
