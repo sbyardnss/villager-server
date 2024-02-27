@@ -45,6 +45,7 @@ class GuestView(ViewSet):
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
 
+
     # def create(self, request, pk=None):
     #     club = ChessClub.objects.get(pk=request.data['club'])
     #     serialized = CreateGuestPlayerSerializer(data=request.data)

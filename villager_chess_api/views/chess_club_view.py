@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from villager_chess_api.models import Player, ChessClub
-from villager_chess_api.serializers import ChessClubSerializer, CreateChessClubSerializer
+from villager_chess_api.serializers import ChessClubSerializer, CreateChessClubSerializer, GuestPlayerSerializer
 
 class ChessClubView(ViewSet):
     """handles rest requests for chess club objects"""
@@ -29,6 +29,7 @@ class ChessClubView(ViewSet):
 
     def update(self, request, pk=None):
         club = ChessClub.objects.get(pk=pk)
+        print('hitting')
         try:
             if request.data['old_password'] == club.password or club.password == None:
                 # club.name = request.data['clubObj']['name']
@@ -41,13 +42,15 @@ class ChessClubView(ViewSet):
                 if request.data['clubObj']['newPassword']:
                     club.password = request.data['clubObj']['newPassword']
                 club.save()
-                return Response(None, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response({'message': 'Password does not match or is not set.', 'status':  400}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Club Updated!', 'status': 200}, status=status.HTTP_200_OK)
         except ValueError as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': ex.args[0], 'status': 400}, status=status.HTTP_400_BAD_REQUEST)
         except KeyError as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': ex.args[0], 'status': 400}, status=status.HTTP_400_BAD_REQUEST)
         except AssertionError as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': ex.args[0], 'status': 400}, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
         club = ChessClub.objects.get(pk=pk)
@@ -94,17 +97,23 @@ class ChessClubView(ViewSet):
     def end_club(self, request, pk=None):
         club = ChessClub.objects.get(pk=pk)
         player = Player.objects.get(user=request.auth.user)
-        if (club.manager == player):
-            club.delete()
-            return Response(None, status=status.HTTP_204_NO_CONTENT)
+        if club.manager == player:
+            if request.data['password'] == club.password or club.password is None:
+                club.delete()
+                return Response({'message': 'club deleted', 'status': 200}, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'incorrect password'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'message': 'not the creator'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'message': 'not the creator or incorrect password'}, status=status.HTTP_400_BAD_REQUEST)
     
     @action(methods=['put'], detail=True)
     def remove_club_password(self, request, pk=None):
         club=ChessClub.objects.get(pk=pk)
+
+        if club.password and request.data['password'] != club.password:
+            return Response({'message': 'Incorrect password. Please input and confirm current password in fields to remove password requirement'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            if club.password ==request.data['password']:
+            if club.password == request.data['password']:
                 club.password = None
                 club.save()
                 return Response({'message': 'password removed'}, status=status.HTTP_200_OK)
@@ -114,3 +123,10 @@ class ChessClubView(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
         except AssertionError as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(methods=['get'], detail=True)
+    def get_club_guests(self, request, pk=None):
+        club = ChessClub.objects.get(pk=pk)
+        guests = club.guest_members.all()
+        serialized = GuestPlayerSerializer(guests, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)
