@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from villager_chess_api.models import Tournament, Player, TimeSetting, Game, GuestPlayer, ChessClub
 from villager_chess_api.serializers import TournamentSerializer, CreateTournamentSerializer
-
+import json
 class TournamentView(ViewSet):
     """handles rest requests for tournament objects"""
 
@@ -26,8 +26,11 @@ class TournamentView(ViewSet):
         """handles POST requests for tournament view"""
         creator = Player.objects.get(user=request.auth.user)
         time_setting = TimeSetting.objects.get(pk=request.data['timeSetting'])
-        competitor_list = request.data['competitors']
-        guest_competitor_list = request.data['guest_competitors']
+        # competitor_list = request.data['competitors']
+        competitor_list = [competitor['id'] for competitor in request.data['competitors']]
+        # guest_competitor_list = request.data['guest_competitors']
+        guest_competitor_list = [guest['id'] for guest in request.data['guest_competitors']]
+
         serialized = CreateTournamentSerializer(data=request.data)
         serialized.is_valid(raise_exception=True)
         serialized.save(creator=creator, time_setting=time_setting,
@@ -39,8 +42,15 @@ class TournamentView(ViewSet):
         tournament = Tournament.objects.get(pk=pk)
         tournament.rounds = request.data['rounds']
         tournament.pairings = request.data['pairings']
-        tournament.competitors.set(request.data['competitors'])
-        tournament.guest_competitors.set(request.data['guest_competitors'])
+        # tournament.competitors.set(request.data['competitors'])
+        competitor_ids = [competitor['id'] for competitor in request.data['competitors']]
+        competitors = Player.objects.filter(id__in=competitor_ids)
+        tournament.competitors.set(competitors)
+        # tournament.guest_competitors.set(request.data['guest_competitors'])
+        guest_competitor_ids = [guest['id'] for guest in request.data['guest_competitors']]
+        guest_competitors = GuestPlayer.objects.filter(id__in=guest_competitor_ids)
+        tournament.guest_competitors.set(guest_competitors)
+        # print(json.dumps(TournamentSerializer(tournament, many=False).data, indent=4))
         tournament.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
@@ -83,6 +93,13 @@ class TournamentView(ViewSet):
     def end_tournament(self, request, pk=None):
         tournament = Tournament.objects.get(pk=pk)
         tournament.complete = True
+        tournament.save()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['put'], detail=True)
+    def reopen_tournament(self, request, pk=None):
+        tournament = Tournament.objects.get(pk=pk)
+        tournament.complete = False
         tournament.save()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 

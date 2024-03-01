@@ -3,6 +3,6 @@ from .community_post_serializers import CommunityPostSerializer, CreateCommunity
 from .game_serializers import GameSerializer, CreateGameSerializer
 from .guest_player_serializers import GuestPlayerSerializer, CreateGuestPlayerSerializer
 from .message_serializers import MessageSerializer, CreateMessageSerializer
-from .player_serializers import PlayerSerializer, CreatePlayerSerializer, PlayerProfileSerializer
+from .player_serializers import PlayerSerializer, CreatePlayerSerializer, PlayerProfileSerializer, PlayerRelatedSerializer
 from .time_setting_serializer import TimeSettingSerializer, CreateTimeSettingSerializer
 from .tournament_serializers import TournamentSerializer, CreateTournamentSerializer

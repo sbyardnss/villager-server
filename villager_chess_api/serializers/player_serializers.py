@@ -4,7 +4,8 @@ from rest_framework import serializers
 class PlayerRelatedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ('id', 'full_name', 'username')
+        # fields = ('id', 'full_name', 'username')
+        fields = ('id', 'full_name')
 class PlayerSerializer(serializers.ModelSerializer):
     friends = PlayerRelatedSerializer(many=True)
 

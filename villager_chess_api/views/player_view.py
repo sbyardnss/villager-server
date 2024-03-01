@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from django.db.models import Count, Q
 from villager_chess_api.models import Player, ChessClub
-from villager_chess_api.serializers import PlayerSerializer, PlayerProfileSerializer, CreatePlayerSerializer, GuestPlayerSerializer
+from villager_chess_api.serializers import PlayerSerializer, PlayerProfileSerializer, CreatePlayerSerializer, GuestPlayerSerializer, PlayerRelatedSerializer
 
 class PlayerView(ViewSet):
     """handles rest requests for player objects"""
@@ -77,7 +77,7 @@ class PlayerView(ViewSet):
             players.extend(club.members.all())
             # Add all guests from the club to the list
             guests.extend(club.guest_members.all())
-        serialized_players = PlayerSerializer(players, many=True)
+        serialized_players = PlayerRelatedSerializer(players, many=True)
         serialized_guests = GuestPlayerSerializer(guests, many=True)
         serialized_all = serialized_players.data + serialized_guests.data
         return Response(serialized_all, status=status.HTTP_200_OK)
