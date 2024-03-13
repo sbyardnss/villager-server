@@ -9,7 +9,7 @@ class TournamentSerializer(serializers.ModelSerializer):
     # games = GameTournamentSerializer(many=True)
     competitors = PlayerOnTournamentSerializer(many=True)
     guest_competitors = GuestPlayerSerializer(many=True)
-    club = ClubRelatedSerializer(many=False)
+    # club = ClubRelatedSerializer(many=False)
 
     class Meta:
         model = Tournament

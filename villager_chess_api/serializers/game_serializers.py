@@ -2,6 +2,7 @@ from rest_framework import serializers
 from villager_chess_api.models import Game, GuestPlayer, Player
 from .guest_player_serializers import GuestPlayerSerializer
 from .player_serializers import PlayerRelatedSerializer
+from django.contrib.contenttypes.models import ContentType
 
 class PlayerObjectRelatedField(serializers.RelatedField):
     """
@@ -39,3 +40,4 @@ class CreateGameSerializer(serializers.ModelSerializer):
 # this line gets
 # print(ContentType.objects.get_for_model(GuestPlayer).model)
 
+print(ContentType.objects.get_for_model(Player))

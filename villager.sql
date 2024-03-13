@@ -54,7 +54,7 @@ SET win_style = ''
 WHERE ID = 131
 
 DELETE FROM villager_chess_api_game
-WHERE tournament_id = 32
+WHERE id = 1613
 
 
 DROP TABLE villager_chess_api_tournament_competitors
@@ -67,5 +67,9 @@ SET pairings = '{"round": 1, "match": 1, "player1": 3, "player2": "g7"}, {"round
 WHERE id = 79
 
 UPDATE villager_chess_api_tournament
-SET pairings = '[{"round": 1, "match": 1, "player1": 3, "player2": "g7"}, {"round": 1, "match": 2, "player1": "g5", "player2": 4}, {"round": 1, "match": 3, "player1": 2, "player2": "g1"}, {"round": 1, "match": 4, "player1": 1, "player2": null}, {"round": 2, "match": 1, "player1": 2, "player2": "g5"}, {"round": 2, "match": 2, "player1": 1, "player2": "g1"}, {"round": 2, "match": 3, "player1": 4, "player2": 3}, {"round": 2, "match": 4, "player1": "g7", "player2": null}, {"round": 3, "match": 1, "player1": "g5", "player2": "g1"}, {"round": 3, "match": 2, "player1": "g7", "player2": 2}, {"round": 3, "match": 3, "player1": 1, "player2": 4}, {"round": 3, "match": 4, "player1": 3, "player2": null}, {"round": 4, "match": 1, "player1": 3, "player2": "g1"}, {"round": 4, "match": 2, "player1": 1, "player2": "g5"}, {"round": 4, "match": 3, "player1": "g7", "player2": 4}, {"round": 4, "match": 4, "player1": 2, "player2": null}]'
-WHERE id = 79;
+-- SET pairings = '[{"round": 1, "match": 1, "player1": 3, "player2": "g7"}, {"round": 1, "match": 2, "player1": "g5", "player2": 4}, {"round": 1, "match": 3, "player1": 2, "player2": "g1"}, {"round": 1, "match": 4, "player1": 1, "player2": null}, {"round": 2, "match": 1, "player1": 2, "player2": "g5"}, {"round": 2, "match": 2, "player1": 1, "player2": "g1"}, {"round": 2, "match": 3, "player1": 4, "player2": 3}, {"round": 2, "match": 4, "player1": "g7", "player2": null}, {"round": 3, "match": 1, "player1": "g5", "player2": "g1"}, {"round": 3, "match": 2, "player1": "g7", "player2": 2}, {"round": 3, "match": 3, "player1": 1, "player2": 4}, {"round": 3, "match": 4, "player1": 3, "player2": null}, {"round": 4, "match": 1, "player1": 3, "player2": "g1"}, {"round": 4, "match": 2, "player1": 1, "player2": "g5"}, {"round": 4, "match": 3, "player1": "g7", "player2": 4}, {"round": 4, "match": 4, "player1": 2, "player2": null}]'
+-- SET rounds = 1
+
+
+SET pairings = '[{"round": 1, "match": 1, "player1": "g74", "player2": 5}, {"round": 1, "match": 2, "player1": "g73", "player2": "g72"}, {"round": 1, "match": 3, "player1": 1, "player2": null}]'
+WHERE id = 151;

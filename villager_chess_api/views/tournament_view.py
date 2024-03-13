@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from villager_chess_api.models import Tournament, Player, TimeSetting, Game, GuestPlayer, ChessClub
 from villager_chess_api.serializers import TournamentSerializer, CreateTournamentSerializer
-import json
+# import json
 class TournamentView(ViewSet):
     """handles rest requests for tournament objects"""
 
@@ -25,7 +25,7 @@ class TournamentView(ViewSet):
     def create(self, request):
         """handles POST requests for tournament view"""
         creator = Player.objects.get(user=request.auth.user)
-        time_setting = TimeSetting.objects.get(pk=request.data['timeSetting'])
+        time_setting = TimeSetting.objects.get(pk=request.data['time_setting'])
         # competitor_list = request.data['competitors']
         competitor_list = [competitor['id'] for competitor in request.data['competitors']]
         # guest_competitor_list = request.data['guest_competitors']
