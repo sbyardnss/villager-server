@@ -37,7 +37,7 @@ class GameView(ViewSet):
 
     def create(self, request):
         """handles POST requests for game view"""
-        print(json.dumps(request.data, indent=4))
+        # print(json.dumps(request.data, indent=4))
         
         target_player_w_id, target_player_w_ct = self.get_player_info(request.data.get('player_w'), request.data.get('player_w_model_type'))
         target_player_b_id, target_player_b_ct = self.get_player_info(request.data.get('player_b'), request.data.get('player_b_model_type'))
@@ -167,7 +167,7 @@ class GameView(ViewSet):
             Q(target_player_b_id=user.id, target_player_b_ct=11),
             Q(target_winner_id=None, target_winner_ct=None),
         )
-        active_user_games = active_user_games.exclude(win_style='draw')
+        active_user_games = active_user_games.exclude(Q(win_style='draw') | Q(accepted = False))
         serialized = GameSerializer(active_user_games, many=True)
 
         return Response(serialized.data, status=status.HTTP_200_OK)
