@@ -65,19 +65,35 @@ class PlayerView(ViewSet):
         player = Player.objects.get(user=request.auth.user)
         serialized = PlayerProfileSerializer(player, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
-
+    # THIS ACTION WORKED BUT WAS RETURNING DUPLICATE INFO
+    # @action(methods=['get'], detail=False)
+    # def club_mates(self, request):
+    #     player = Player.objects.get(user=request.auth.user)
+    #     clubs = ChessClub.objects.filter(members=player)
+    #     players = []
+    #     guests = []
+    #     for club in clubs:
+    #         # Add all players from the club to the list
+    #         players.extend(club.members.all())
+    #         # Add all guests from the club to the list
+    #         guests.extend(club.guest_members.all())
+    #     serialized_players = PlayerRelatedSerializer(players, many=True)
+    #     serialized_guests = GuestPlayerSerializer(guests, many=True)
+    #     serialized_all = serialized_players.data + serialized_guests.data
+    #     return Response(serialized_all, status=status.HTTP_200_OK)
     @action(methods=['get'], detail=False)
     def club_mates(self, request):
         player = Player.objects.get(user=request.auth.user)
         clubs = ChessClub.objects.filter(members=player)
-        players = []
-        guests = []
+        players = set()
+        guests = set()
         for club in clubs:
-            # Add all players from the club to the list
-            players.extend(club.members.all())
-            # Add all guests from the club to the list
-            guests.extend(club.guest_members.all())
-        serialized_players = PlayerRelatedSerializer(players, many=True)
-        serialized_guests = GuestPlayerSerializer(guests, many=True)
+            # Add all players from the club to the set, ensuring uniqueness
+            players.update(club.members.all().distinct())
+            # Add all guests from the club to the set, ensuring uniqueness
+            guests.update(club.guest_members.all().distinct())
+        # Convert sets back to lists for serialization
+        serialized_players = PlayerRelatedSerializer(list(players), many=True)
+        serialized_guests = GuestPlayerSerializer(list(guests), many=True)
         serialized_all = serialized_players.data + serialized_guests.data
         return Response(serialized_all, status=status.HTTP_200_OK)

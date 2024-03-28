@@ -12,7 +12,7 @@ DELETE FROM villager_chess_api_tournament_guest_competitors
 WHERE id = 33
 
 DELETE FROM villager_chess_api_game
-WHERE id = 1643
+WHERE id = 1647
 
 UPDATE villager_chess_api_tournament
 -- SET pairings = '[{"round": 1, "match": 1, "player1": 3, "player2": "g5"}, {"round": 1, "match": 2, "player1": 4, "player2": 6}, {"round": 1, "match": 3, "player1": 1, "player2": "g8"}, {"round": 1, "match": 4, "player1": "g1", "player2": null}]'
@@ -54,7 +54,7 @@ SET win_style = ''
 WHERE ID = 131
 
 DELETE FROM villager_chess_api_game
-WHERE id = 1613
+WHERE id > 1657
 
 
 DROP TABLE villager_chess_api_tournament_competitors
@@ -71,5 +71,5 @@ UPDATE villager_chess_api_tournament
 -- SET rounds = 1
 
 
-SET pairings = '[{"round": 1, "match": 1, "player1": "g74", "player2": 5}, {"round": 1, "match": 2, "player1": "g73", "player2": "g72"}, {"round": 1, "match": 3, "player1": 1, "player2": null}]'
-WHERE id = 151;
+SET pairings = '[{"round": 1, "match": 1, "player1": 3, "player2": 2}, {"round": 1, "match": 2, "player1": "g1", "player2": 4}, {"round": 1, "match": 3, "player1": 1, "player2": null}]'
+WHERE id = 156;
