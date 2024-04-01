@@ -4,6 +4,8 @@ services:
   backend:
     build:
       context: .
+    environment:
+      - CONTAINER=docker
     ports:
       - "8000:8000"
     env_file:
