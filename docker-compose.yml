@@ -8,8 +8,12 @@ services:
       - CONTAINER=docker
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+    # EXAMPLE FOR CHERRY PICKING ENV
+    # env_file:
+    #   - path: ./default.env
+    #     required: true
+    #   - path: ./optional.env
+    #     required: false
     volumes:
       - static:/static
     networks:
@@ -26,7 +30,7 @@ services:
       # - PG_INIT=1
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-      - ./villager_chess_api/fixtures:/docker-entrypoint-initdb.d
+      # - ./villager_chess_api/fixtures:/docker-entrypoint-initdb.d #remove
     networks:
       - villager_network
 
