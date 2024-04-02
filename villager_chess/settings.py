@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import django_on_heroku
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-xw8gkue0a=_wma%rcc*$)i-3%(h71!lj&mpuc1c0#8&rgkv$l_'
+# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -62,6 +65,10 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    # 'http://localhost:3051', # Added Nginx server address and port
+    # 'http://127.0.0.1:3051', # Added Nginx server address and port
+    'http://localhost:3050', # Added Nginx server address and port
+    'http://127.0.0.1:3050', # Added Nginx server address and port
     # 'https://6470c208d361a40009ceab9e--visionary-treacle-0efacd.netlify.app',
     'https://loquacious-bienenstitch-cc2290.netlify.app',
     # 'https://visionary-treacle-0efacd.netlify.app'
@@ -70,6 +77,10 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    # 'http://localhost:3051', # Added Nginx server address and port
+    # 'http://127.0.0.1:3051', # Added Nginx server address and port
+    'http://localhost:3050', # Added Nginx server address and port
+    'http://127.0.0.1:3050', # Added Nginx server address and port
     'https://loquacious-bienenstitch-cc2290.netlify.app',
     'https://villagerchess.netlify.app'
 ]
@@ -115,13 +126,40 @@ WSGI_APPLICATION = 'villager_chess.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
+if os.getenv('CONTAINER')=='local':
+  DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+if os.getenv('CONTAINER')=='docker':
+    DATABASES = {
+      'default': {
+          'ENGINE': 'django.db.backends.sqlite3',
+          'NAME': BASE_DIR / 'docker.sqlite3',
+      }
+    }
+# Override with PostgreSQL settings if environment variables are set
+# NEED TO ADDRESS USAGE OF GUEST USER BEFORE ABLE TO CREATE DATABASE FROM SCRATCH IN DOCKER BUILD
+# NEED TO PIP INSTALL PYTHON-DECOUPLE IF YOU GO THIS ROUTE
+# if os.environ.get('DATABASE_ENGINE'):
+#     DATABASES['default'] = {
+#         'ENGINE': config('DATABASE_ENGINE'),
+#         'NAME': config('DATABASE_NAME'),
+#         'USER': config('DATABASE_USER'),
+#         'PASSWORD': config('DATABASE_PASSWORD'),
+#         'HOST': config('DATABASE_HOST'),
+#         'PORT': config('DATABASE_PORT'),
+#     }
+# if os.environ.get('DATABASE_ENGINE'):
+#     print('using docker db')
+#     DATABASES['default'] = {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'docker.sqlite3',
+#     }
+
+
 
 
 # Password validation

@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: .
+    environment:
+      - CONTAINER=docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - static:/static
+    networks:
+      - villager_network
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=villager_server
+      - POSTGRES_USER=sbyard
+      - POSTGRES_PASSWORD=mypassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - villager_network
+
+volumes:
+  static:
+  postgres_data:
+
+networks:
+  villager_network:
+    external: true

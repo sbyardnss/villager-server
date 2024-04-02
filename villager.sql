@@ -54,7 +54,7 @@ SET win_style = ''
 WHERE ID = 131
 
 DELETE FROM villager_chess_api_game
-WHERE id > 1657
+WHERE id > 1
 
 
 DROP TABLE villager_chess_api_tournament_competitors
