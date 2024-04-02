@@ -134,9 +134,11 @@ if os.getenv('CONTAINER')=='local':
     }
 }
 if os.getenv('CONTAINER')=='docker':
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'docker.sqlite3',
+    DATABASES = {
+      'default': {
+          'ENGINE': 'django.db.backends.sqlite3',
+          'NAME': BASE_DIR / 'docker.sqlite3',
+      }
     }
 # Override with PostgreSQL settings if environment variables are set
 # NEED TO ADDRESS USAGE OF GUEST USER BEFORE ABLE TO CREATE DATABASE FROM SCRATCH IN DOCKER BUILD
