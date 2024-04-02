@@ -16,13 +16,7 @@ WORKDIR /villager_chess_api
 COPY ./entrypoint.sh .
 RUN chmod +x ./entrypoint.sh
 
-# Copy load_fixtures.sh script and make it executable
-# COPY ./villager_chess_api/fixtures/load_fixtures.sh /docker-entrypoint-initdb.d/
-# RUN chmod +x /docker-entrypoint-initdb.d/load_fixtures.sh
-
 ENTRYPOINT [ "./entrypoint.sh" ]
 
 # Expose port
 EXPOSE 8000
-
-#CHECK

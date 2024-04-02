@@ -8,12 +8,6 @@ services:
       - CONTAINER=docker
     ports:
       - "8000:8000"
-    # EXAMPLE FOR CHERRY PICKING ENV
-    # env_file:
-    #   - path: ./default.env
-    #     required: true
-    #   - path: ./optional.env
-    #     required: false
     volumes:
       - static:/static
     networks:
@@ -27,10 +21,8 @@ services:
       - POSTGRES_DB=villager_server
       - POSTGRES_USER=sbyard
       - POSTGRES_PASSWORD=mypassword
-      # - PG_INIT=1
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-      # - ./villager_chess_api/fixtures:/docker-entrypoint-initdb.d #remove
     networks:
       - villager_network
 
@@ -39,42 +31,5 @@ volumes:
   postgres_data:
 
 networks:
-  # dev:
   villager_network:
     external: true
-# CHECK
-
-
-# FOR LATER REFERENCE IN SETTING UP THE FULL CONTAINER TO RUN WITH ONE COMMAND, THE INFO BELOW MIGHT BE USEFUL
-
-# Docker Compose's depends_on attribute can be used to control the startup order of services. 
-# However, it's important to note that depends_on only waits for the container to start, not 
-# for the application inside the container to be ready. This means that if your backend service 
-# takes some time to initialize (for example, if it needs to perform database migrations or 
-# start up a web server), your frontend service might start before the backend is fully ready 
-# to accept connections 1.
-
-# To handle this, you can use the condition attribute with service_healthy or service_started to 
-# ensure that your frontend service only starts after the backend service is not only running but 
-# also ready to accept connections. This requires defining a healthcheck for your backend service 
-# that Docker Compose can use to determine when the service is ready
-
-# services:
-#   backend:
-#     build:
-#       context: .
-#     ports:
-#       - "8000:8000"
-#     env_file:
-#       - .env
-#     volumes:
-#       - static:/static
-#     networks:
-#       - custom_network_name
-#     depends_on:
-#       - db
-#     healthcheck:
-#       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-#       interval: 30s
-#       timeout: 10s
-#       retries: 5
