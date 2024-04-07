@@ -20,7 +20,7 @@ class PlayerObjectRelatedField(serializers.RelatedField):
             raise Exception('Unexpected type of tagged object')
         return serializer.data
 
-
+# WE DONT NEED CT FOR PLAYERS IN FRONTEND TARGET_WINNER_CT, ETC
 class GameSerializer(serializers.ModelSerializer):
     player_w = PlayerObjectRelatedField(many=False, read_only=True)
     player_b = PlayerObjectRelatedField(many=False, read_only=True)

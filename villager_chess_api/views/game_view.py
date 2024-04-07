@@ -34,7 +34,7 @@ class GameView(ViewSet):
             player = player_model.objects.get(pk=player_data['id'])
             return player.id, content_type
         return None, None
-
+    # TODO WE CURRENTLY DONT NEED ANY RESPONSE AFTER SENDING A NEW GAME. 
     def create(self, request):
         """handles POST requests for game view"""
         # print(json.dumps(request.data, indent=4))
