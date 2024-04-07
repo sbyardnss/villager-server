@@ -92,7 +92,9 @@ class GameView(ViewSet):
             game.pgn = request.data['pgn']
             game.save()
         # game.save()
-        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        serializer = GameSerializer(game)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        # return Response(None, status=status.HTTP_204_NO_CONTENT)
     @action(methods=['get'], detail=False)
     def get_active_user_games(self, request, pk=None):
         user = Player.objects.get(user=request.auth.user)
