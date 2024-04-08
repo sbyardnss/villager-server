@@ -92,7 +92,7 @@ class GameView(ViewSet):
             game.pgn = request.data['pgn']
             game.save()
         # game.save()
-        serializer = GameSerializer(game)
+        serializer = GameSerializer(game, many=False)
         return Response(serializer.data, status=status.HTTP_200_OK)
         # return Response(None, status=status.HTTP_204_NO_CONTENT)
     @action(methods=['get'], detail=False)
