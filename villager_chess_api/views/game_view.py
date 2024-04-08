@@ -131,8 +131,8 @@ class GameView(ViewSet):
         serialized = GameSerializer(games, many=True)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
-    @action(methods=['get'], detail=True)
-    def get_selected_tournament_games(self, request, pk=None):
-        games = Game.objects.filter(tournament=pk)
-        serialized = GameSerializer(games, many=True)
-        return Response(serialized.data, status=status.HTTP_200_OK)
+    # @action(methods=['get'], detail=True)
+    # def get_selected_tournament_games(self, request, pk=None):
+    #     games = Game.objects.filter(tournament=pk)
+    #     serialized = GameSerializer(games, many=True)
+    #     return Response(serialized.data, status=status.HTTP_200_OK)
