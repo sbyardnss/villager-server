@@ -56,12 +56,11 @@ class TournamentView(ViewSet):
 
     def destroy(self, request, pk=None):
         tournament = Tournament.objects.get(pk=pk)
-        # tourney_games = Game.objects.filter(tournament = tournament.id)
         tourney_games = tournament.games.all()
         for game in tourney_games:
             game.delete()
-        tournament.competitors.set([])
-        tournament.guest_competitors.set([])
+        tournament.competitors.clear()
+        tournament.guest_competitors.clear()
         tournament.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
