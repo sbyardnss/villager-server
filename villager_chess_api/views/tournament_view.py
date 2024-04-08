@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from villager_chess_api.models import Tournament, Player, TimeSetting, Game, GuestPlayer, ChessClub
-from villager_chess_api.serializers import TournamentSerializer, CreateTournamentSerializer
+from villager_chess_api.serializers import TournamentSerializer, CreateTournamentSerializer, GameSerializer
 # import json
 class TournamentView(ViewSet):
     """handles rest requests for tournament objects"""
@@ -56,11 +56,11 @@ class TournamentView(ViewSet):
 
     def destroy(self, request, pk=None):
         tournament = Tournament.objects.get(pk=pk)
-        tourney_games = Game.objects.filter(tournament = tournament.id)
+        tourney_games = tournament.games.all()
         for game in tourney_games:
             game.delete()
-        tournament.competitors.set([])
-        tournament.guest_competitors.set([])
+        tournament.competitors.clear()
+        tournament.guest_competitors.clear()
         tournament.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     
@@ -173,3 +173,10 @@ class TournamentView(ViewSet):
                 else:
                     scorecard[guest.guest_id].append('none')
         return Response(scorecard, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=True)
+    def get_selected_tournament_games(self, request, pk=None):
+        tournament = Tournament.objects.get(pk=pk)
+        tourney_games = tournament.games.all()
+        serialized = GameSerializer(tourney_games, many=True)
+        return Response(serialized.data, status=status.HTTP_200_OK)

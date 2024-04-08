@@ -29,8 +29,17 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
-                  'time_setting', 'winner', 'pgn', 'bye', 'accepted', 'win_style', 'target_winner_ct', 'target_player_b_ct', 'target_player_w_ct')  # removed target_winner_ct, target_player_b_ct, target_player_w_ct
+                  'time_setting', 'winner', 'pgn', 'bye', 'accepted', 'win_style')
 
+
+class CreateTournamentGameSerializer(serializers.ModelSerializer):
+    player_w = PlayerObjectRelatedField(many=False, read_only=True)
+    player_b = PlayerObjectRelatedField(many=False, read_only=True)
+    winner = PlayerObjectRelatedField(many=False, read_only=True)
+    class Meta:
+        model = Game
+        fields = ['id', 'player_w', 'player_b', 'date_time', 'tournament', 'tournament_round',
+                  'time_setting', 'winner', 'pgn', 'bye', 'accepted', 'win_style' ]
 
 class CreateGameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,4 +49,4 @@ class CreateGameSerializer(serializers.ModelSerializer):
 # this line gets
 # print(ContentType.objects.get_for_model(GuestPlayer).model)
 
-print(ContentType.objects.get_for_model(Player))
+# print(ContentType.objects.get_for_model(Player))
