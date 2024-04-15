@@ -23,7 +23,8 @@ class GuestView(ViewSet):
         serialized.save()
         return Response(serialized.data, status=status.HTTP_201_CREATED)
     def destroy(self, request, pk=None):
-        guest = GuestPlayer.objects.get(guest_id = request.data['guestId'])
+        # guest = GuestPlayer.objects.get(guest_id = request.data['guestId'])
+        guest = GuestPlayer.objects.get(pk=pk)
         guest.delete()
         return Response(None, status=status.HTTP_204_NO_CONTENT)
     # @action(methods=['post'], detail=True)
