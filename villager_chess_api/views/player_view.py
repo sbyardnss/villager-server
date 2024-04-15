@@ -97,3 +97,10 @@ class PlayerView(ViewSet):
         serialized_guests = GuestPlayerSerializer(list(guests), many=True)
         serialized_all = serialized_players.data + serialized_guests.data
         return Response(serialized_all, status=status.HTTP_200_OK)
+    
+    @action(methods=['get'], detail=False)
+    def get_active_player(self, request):
+      player = Player.objects.get(user=request.auth.user)
+      serialized = PlayerRelatedSerializer(player, many=False)
+      return Response(serialized.data, status=status.HTTP_200_OK)
+      
